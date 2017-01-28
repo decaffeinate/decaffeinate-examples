@@ -2,12 +2,18 @@
   "name": "decaffeinate-examples",
   "description": "A tool to automatically run decaffeinate on some open source projects",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src",
+    "test": "npm run lint"
   },
   "author": "Alan Pierce",
   "license": "MIT",
   "devDependencies": {
-    "babel-preset-env": "^1.1.8",
-    "babel-register": "^6.22.0"
+    "babel-eslint": "^7.1.1",
+    "babel-polyfill": "^6.22.0",
+    "babel-preset-latest": "^6.22.0",
+    "babel-register": "^6.22.0",
+    "commander": "^2.9.0",
+    "eslint": "^3.14.1",
+    "eslint-plugin-babel": "^4.0.1"
   }
 }
