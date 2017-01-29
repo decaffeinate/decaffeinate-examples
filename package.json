@@ -3,7 +3,7 @@
   "description": "A tool to automatically run decaffeinate on some open source projects",
   "scripts": {
     "lint": "eslint src",
-    "test": "npm run lint"
+    "test": "npm run lint && bin/example-runner hubot"
   },
   "author": "Alan Pierce",
   "license": "MIT",
