@@ -36,7 +36,8 @@ async function testProject(project) {
   let repoDir = `./tmp-projects/${project}-${suffix}`;
   await run(`mkdir ${repoDir}`);
 
-  await run(`git clone ${config.cloneUrl} ${repoDir}`);
+  let cloneSuffix = config.branch ? `--branch ${config.branch}` : '';
+  await run(`git clone ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
 
   if (config.useDefaultConfig) {
     await run(`cp -R ./default-config/. ${repoDir}`);
@@ -46,7 +47,6 @@ async function testProject(project) {
   }
 
   process.chdir(repoDir);
-  await run('bulk-decaffeinate check');
   await run('npm install');
   let dependencies = getDependencies(config);
   if (dependencies.length > 0) {
@@ -54,7 +54,17 @@ async function testProject(project) {
   }
   await run('git add -A');
   await run('git commit -m "Add dependencies and config to prepare for decaffeinate"');
-  await run('bulk-decaffeinate convert');
+
+  await run('bulk-decaffeinate check');
+  if (await exists('./decaffeinate-errors.log')) {
+    await run('git add -A');
+    await run('git commit -m "Save decaffeinate error details"');
+
+    await run('bulk-decaffeinate convert -p decaffeinate-successful-files.txt');
+  } else {
+    await run('bulk-decaffeinate convert');
+  }
+
   await run('bulk-decaffeinate clean');
   // Make the patch its own commit after everything else so it's easier to
   // iterate on.
@@ -63,7 +73,11 @@ async function testProject(project) {
     await run('git add -A');
     await run('git commit -m "Modify the build to work with JavaScript"');
   }
-  await run('npm test');
+  if (config.skipTests) {
+    console.log('Skipping tests for this project.');
+  } else {
+    await run('npm test');
+  }
 }
 
 const DEFAULT_PACKAGES = [
