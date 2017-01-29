@@ -1,5 +1,5 @@
 export default {
-  cloneUrl: 'https://github.com/github/hubot.git',
+  cloneUrl: 'https://github.com/postcss/autoprefixer.git',
   extraDependencies: [
     'babel-preset-env',
     'babel-register',
