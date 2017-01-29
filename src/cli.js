@@ -12,40 +12,48 @@ export default function cli() {
     .action(projectArg => project = projectArg)
     .parse(process.argv);
 
-  testProject(project);
+  runCli(project);
 }
 
-async function testProject(project) {
+async function runCli(project) {
   try {
-    let exampleDir = path.resolve(`./examples/${project}`);
-    if (!await exists(exampleDir)) {
-      throw new Error(`Unknown project: ${project}`);
-    }
-
-    let config = require(`../examples/${project}/config`).default;
-    let repoDir = await mkdtemp(`./tmp-projects/${project}-`);
-
-    await run(`git clone ${config.cloneUrl} ${repoDir}`);
-
-    if (await exists(`${exampleDir}/config-files`)) {
-      await run(`cp -R ${exampleDir}/config-files/. ${repoDir}`);
-    }
-
-    process.chdir(repoDir);
-    await run('bulk-decaffeinate check');
-    await run('npm install');
-    if (config.extraDependencies.length > 0) {
-      await run(`npm install --save-dev ${config.extraDependencies.join(' ')}`);
-    }
-    if (await exists(`${exampleDir}/decaffeinate.patch`)) {
-      await run(`git apply ${exampleDir}/decaffeinate.patch`);
-    }
-    await run('git add -A');
-    await run('git commit -m "Add dependencies to prepare for decaffeinate"');
-    await run('bulk-decaffeinate convert');
-    await run('bulk-decaffeinate clean');
-    await run('npm test');
+    await testProject(project);
   } catch (e) {
     console.error(e.message);
   }
+}
+
+async function testProject(project) {
+  let exampleDir = path.resolve(`./examples/${project}`);
+  if (!await exists(exampleDir)) {
+    throw new Error(`Unknown project: ${project}`);
+  }
+
+  let config = require(`../examples/${project}/config`).default;
+  let repoDir = await mkdtemp(`./tmp-projects/${project}-`);
+
+  await run(`git clone ${config.cloneUrl} ${repoDir}`);
+
+  if (await exists(`${exampleDir}/config-files`)) {
+    await run(`cp -R ${exampleDir}/config-files/. ${repoDir}`);
+  }
+
+  process.chdir(repoDir);
+  await run('bulk-decaffeinate check');
+  await run('npm install');
+  if (config.extraDependencies.length > 0) {
+    await run(`npm install --save-dev ${config.extraDependencies.join(' ')}`);
+  }
+  await run('git add -A');
+  await run('git commit -m "Add dependencies and config to prepare for decaffeinate"');
+  await run('bulk-decaffeinate convert');
+  await run('bulk-decaffeinate clean');
+  // Make the patch its own commit after everything else so it's easier to
+  // iterate on.
+  if (await exists(`${exampleDir}/decaffeinate.patch`)) {
+    await run(`git apply ${exampleDir}/decaffeinate.patch`);
+    await run('git add -A');
+    await run('git commit -m "Modify the build to work with JavaScript"');
+  }
+  await run('npm test');
 }
