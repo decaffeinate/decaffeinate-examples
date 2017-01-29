@@ -1,5 +1,5 @@
 import commander from 'commander';
-import { exists, readFile, writeFile } from 'mz/fs';
+import { exists, readdir, readFile, writeFile } from 'mz/fs';
 import path from 'path';
 
 import run from './run';
@@ -20,14 +20,29 @@ export default function cli() {
 
 async function runCli(project, shouldPublish) {
   try {
-    await testProject(project, shouldPublish);
+    if (project === 'all') {
+      await testAllProjects(shouldPublish);
+    } else {
+      await testProject(project, shouldPublish);
+    }
   } catch (e) {
     console.error(`ERROR: ${e.message}`);
     process.exitCode = 1;
   }
 }
 
+async function testAllProjects(shouldPublish) {
+  let projectNames = await readdir('./examples');
+  console.log(`Processing all projects: ${projectNames.join(', ')}`);
+  for (let project of projectNames) {
+    console.log(`Processing project ${project}...`);
+    await testProject(project, shouldPublish);
+  }
+  console.log(`Successfully processed all projects: ${projectNames.join(', ')}`);
+}
+
 async function testProject(project, shouldPublish) {
+  let originalCwd = process.cwd();
   let exampleDir = path.resolve(`./examples/${project}`);
   if (!await exists(exampleDir)) {
     throw new Error(`Unknown project: ${project}`);
@@ -54,7 +69,12 @@ async function testProject(project, shouldPublish) {
   if (shouldPublish) {
     await run(`git remote add fork ${config.forkUrl}`);
     await run('git fetch fork');
-    await run('git push fork');
+    // If we're using a custom branch/ref, it may not be valid to push to it, so
+    // skip this step. (Currently this fits all use cases, but it can be made
+    // more flexible later if necessary.)
+    if (!config.branch) {
+      await run('git push fork');
+    }
   }
 
   await run('npm install');
@@ -91,6 +111,8 @@ async function testProject(project, shouldPublish) {
     await run('git commit -m "Update README with decaffeinate results"');
     await run('git push fork HEAD:decaffeinate -f');
   }
+
+  process.chdir(originalCwd);
 }
 
 const DEFAULT_PACKAGES = [
