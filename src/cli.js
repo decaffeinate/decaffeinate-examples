@@ -1,5 +1,5 @@
 import commander from 'commander';
-import { exists, mkdtemp } from 'mz/fs';
+import { exists } from 'mz/fs';
 import path from 'path';
 
 import run from './run';
@@ -20,6 +20,7 @@ async function runCli(project) {
     await testProject(project);
   } catch (e) {
     console.error(e.message);
+    process.exitCode = 1;
   }
 }
 
@@ -30,19 +31,26 @@ async function testProject(project) {
   }
 
   let config = require(`../examples/${project}/config`).default;
-  let repoDir = await mkdtemp(`./tmp-projects/${project}-`);
+
+  let suffix = Math.floor(Math.random() * 1000000000000);
+  let repoDir = `./tmp-projects/${project}-${suffix}`;
+  await run(`mkdir ${repoDir}`);
 
   await run(`git clone ${config.cloneUrl} ${repoDir}`);
 
-  if (await exists(`${exampleDir}/config-files`)) {
-    await run(`cp -R ${exampleDir}/config-files/. ${repoDir}`);
+  if (config.useDefaultConfig) {
+    await run(`cp -R ./default-config/. ${repoDir}`);
+  }
+  if (await exists(`${exampleDir}/bulk-decaffeinate.config.js`)) {
+    await run(`cp ${exampleDir}/bulk-decaffeinate.config.js ${repoDir}`);
   }
 
   process.chdir(repoDir);
   await run('bulk-decaffeinate check');
   await run('npm install');
-  if (config.extraDependencies.length > 0) {
-    await run(`npm install --save-dev ${config.extraDependencies.join(' ')}`);
+  let dependencies = getDependencies(config);
+  if (dependencies.length > 0) {
+    await run(`npm install --save-dev ${dependencies.join(' ')}`);
   }
   await run('git add -A');
   await run('git commit -m "Add dependencies and config to prepare for decaffeinate"');
@@ -56,4 +64,24 @@ async function testProject(project) {
     await run('git commit -m "Modify the build to work with JavaScript"');
   }
   await run('npm test');
+}
+
+const DEFAULT_PACKAGES = [
+  'babel-polyfill',
+  'babel-preset-env',
+  'babel-register',
+  'eslint',
+  'eslint-config-airbnb-base',
+  'eslint-plugin-import',
+];
+
+function getDependencies(config) {
+  let dependencies = [];
+  if (config.useDefaultConfig) {
+    dependencies.push(...DEFAULT_PACKAGES);
+  }
+  if (config.extraDependencies) {
+    dependencies.push(...config.extraDependencies);
+  }
+  return dependencies;
 }

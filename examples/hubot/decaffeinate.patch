@@ -1,5 +1,5 @@
 diff --git a/script/test b/script/test
-index 705a6f5..b1d6e76 100755
+index 705a6f5..5385326 100755
 --- a/script/test
 +++ b/script/test
 @@ -1,4 +1,4 @@
@@ -7,4 +7,4 @@ index 705a6f5..b1d6e76 100755
 
  source script/bootstrap
 -mocha --require coffee-errors --compilers coffee:coffee-script "$@"
-+mocha --require coffee-errors --require babel-register --compilers coffee:coffee-script "$@"
++mocha --require coffee-errors --require babel-register --require babel-polyfill --compilers coffee:coffee-script "$@"

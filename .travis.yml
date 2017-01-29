@@ -1,8 +1,11 @@
 language: node_js
 node_js:
-  - "7"
   - "6"
   - "4"
+before_install:
+  - git config --global user.name 'Test Person'
+  - git config --global user.email 'test@example.com'
+  - npm install -g bulk-decaffeinate decaffeinate eslint jscodeshift
 env:
   - CXX=g++-4.8
 addons:

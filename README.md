@@ -8,7 +8,7 @@ various open source projects.
 ## Example usage
 
 ```
-npm install -g bulk-decaffeinate decaffeinate eslint
+npm install -g bulk-decaffeinate decaffeinate eslint jscodeshift
 git clone https://github.com/decaffeinate/decaffeinate-examples
 cd decaffeinate-examples
 npm install
@@ -24,11 +24,12 @@ should convert successfully and all tests should pass.
 A new project can be added by adding a new subdirectory to the
 [examples](./examples) directory. Each project should have the following:
 * A file called `config.js` exporting an object. That object should have a
-  `cloneUrl` field with the clone URL of the relevant repo, and an
-  `extraDependencies` field for any additional packages to `npm install`.
-* A directory called `config-files`, which particularly should have a
-  `bulk-decaffeinate.config.js` file, but may have other files. All files in
-  this directory are copied to the top level of the repo.
+  `cloneUrl` field with the clone URL of the relevant repo, an
+  `extraDependencies` field for any additional packages to `npm install`, and
+  can opt into a "default config" that installs babel and eslint with
+  reasonable defaults.
+* A `bulk-decaffeinate.config.js` file that will be used for the decaffeinate
+  process.
 * A file called `decaffeinate.patch` that applies a patch to the repo so that
   tests can be run in JavaScript using `npm test`.
 
