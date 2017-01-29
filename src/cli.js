@@ -1,6 +1,6 @@
 import commander from 'commander';
 import { exists, mkdtemp } from 'mz/fs';
-import path from 'path'
+import path from 'path';
 
 import run from './run';
 
@@ -38,7 +38,7 @@ async function testProject(project) {
       await run(`npm install --save-dev ${config.extraDependencies.join(' ')}`);
     }
     if (exists(`${exampleDir}/decaffeinate.patch`)) {
-      await run(`git apply ${exampleDir}/decaffeinate.patch`)
+      await run(`git apply ${exampleDir}/decaffeinate.patch`);
     }
     await run('git commit -a -m "Add dependencies to prepare for decaffeinate"');
     await run('bulk-decaffeinate convert');

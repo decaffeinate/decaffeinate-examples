@@ -27,6 +27,6 @@ export default function run(command) {
       } else {
         reject(new Error(`CLI error. Output: ${output}`));
       }
-    })
+    });
   });
 }
