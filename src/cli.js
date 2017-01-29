@@ -28,7 +28,7 @@ async function testProject(project) {
     await run(`git clone ${config.cloneUrl} ${repoDir}`);
 
     if (await exists(`${exampleDir}/config-files`)) {
-      await run(`cp ${exampleDir}/config-files/* ${repoDir}`);
+      await run(`cp -R ${exampleDir}/config-files/. ${repoDir}`);
     }
 
     process.chdir(repoDir);
@@ -40,7 +40,8 @@ async function testProject(project) {
     if (await exists(`${exampleDir}/decaffeinate.patch`)) {
       await run(`git apply ${exampleDir}/decaffeinate.patch`);
     }
-    await run('git commit -a -m "Add dependencies to prepare for decaffeinate"');
+    await run('git add -A');
+    await run('git commit -m "Add dependencies to prepare for decaffeinate"');
     await run('bulk-decaffeinate convert');
     await run('bulk-decaffeinate clean');
     await run('npm test');
