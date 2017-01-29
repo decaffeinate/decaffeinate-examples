@@ -3,3 +3,9 @@ node_js:
   - "7"
   - "6"
   - "4"
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++-4.9-dev
