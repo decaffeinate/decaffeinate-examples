@@ -1,5 +1,5 @@
 import commander from 'commander';
-import { exists } from 'mz/fs';
+import { exists, readFile, writeFile } from 'mz/fs';
 import path from 'path';
 
 import run from './run';
@@ -10,21 +10,24 @@ export default function cli() {
     .arguments('<project>')
     .description('Run decaffeinate on one of the sample projects.')
     .action(projectArg => project = projectArg)
+    .option('--publish',
+      `Push the resulting repository to the decaffeinate fork. The
+           current git user must have permissions to do so.`)
     .parse(process.argv);
 
-  runCli(project);
+  runCli(project, commander.publish);
 }
 
-async function runCli(project) {
+async function runCli(project, shouldPublish) {
   try {
-    await testProject(project);
+    await testProject(project, shouldPublish);
   } catch (e) {
-    console.error(e.message);
+    console.error(`ERROR: ${e.message}`);
     process.exitCode = 1;
   }
 }
 
-async function testProject(project) {
+async function testProject(project, shouldPublish) {
   let exampleDir = path.resolve(`./examples/${project}`);
   if (!await exists(exampleDir)) {
     throw new Error(`Unknown project: ${project}`);
@@ -47,6 +50,13 @@ async function testProject(project) {
   }
 
   process.chdir(repoDir);
+
+  if (shouldPublish) {
+    await run(`git remote add fork ${config.forkUrl}`);
+    await run('git fetch fork');
+    await run('git push fork');
+  }
+
   await run('npm install');
   let dependencies = getDependencies(config);
   if (dependencies.length > 0) {
@@ -55,8 +65,8 @@ async function testProject(project) {
   await run('git add -A');
   await run('git commit -m "Add dependencies and config to prepare for decaffeinate"');
 
-  await run('bulk-decaffeinate check');
-  if (await exists('./decaffeinate-errors.log')) {
+  let conversionResult = await checkConversion();
+  if (!conversionResult.passed) {
     await run('git add -A');
     await run('git commit -m "Save decaffeinate error details"');
 
@@ -73,10 +83,13 @@ async function testProject(project) {
     await run('git add -A');
     await run('git commit -m "Modify the build to work with JavaScript"');
   }
-  if (config.skipTests) {
-    console.log('Skipping tests for this project.');
-  } else {
-    await run('npm test');
+  let testResult = await runTests(config);
+
+  if (shouldPublish) {
+    await writeFile('./README.md', getReadme(project, conversionResult, testResult));
+    await run('git add -A');
+    await run('git commit -m "Update README with decaffeinate results"');
+    await run('git push fork HEAD:decaffeinate -f');
   }
 }
 
@@ -98,4 +111,80 @@ function getDependencies(config) {
     dependencies.push(...config.extraDependencies);
   }
   return dependencies;
+}
+
+async function checkConversion() {
+  await run('bulk-decaffeinate check');
+  let hasErrorFile = await exists('./decaffeinate-errors.log');
+  if (hasErrorFile) {
+    let results = JSON.parse((await readFile('decaffeinate-results.json')).toString());
+    let numErrors = results.filter(result => result.error).length;
+    let numTotal = results.length;
+    return {
+      passed: false,
+      numErrors,
+      numTotal,
+    };
+  }
+  return {
+    passed: true,
+  };
+}
+
+async function runTests(config) {
+  if (config.skipTests) {
+    console.log('Skipping tests for this project.');
+    return 'SKIPPED';
+  }
+  try {
+    await run('npm test');
+    return 'PASSED';
+  } catch (e) {
+    return 'FAILED';
+  }
+}
+
+function getReadme(project, conversionResult, testResult) {
+  return `\
+# decaffeinate fork of ${project}
+
+## Conversion results
+
+${getConversionResultDescription(conversionResult)}
+
+## Test results
+
+${getTestResultDescription(testResult)}
+
+## About this repository
+
+This repository was generated automatically by the [decaffeinate-examples]
+project using the [decaffeinate] tool.
+
+[decaffeinate-examples]: https://github.com/decaffeinate/decaffeinate-examples
+[decaffeinate]: https://github.com/decaffeinate/decaffeinate
+`;
+}
+
+function getConversionResultDescription(conversionResult) {
+  if (conversionResult.passed) {
+    return 'All files were successfully converted to JavaScript.';
+  } else {
+    return `
+There were ${conversionResult.numErrors} errors out of
+${conversionResult.numTotal} total files.
+
+For more details on the errors, view the [error logs](./decaffeinate-errors.log)
+`;
+  }
+}
+
+function getTestResultDescription(testResult) {
+  if (testResult === 'PASSED') {
+    return 'All tests passed.';
+  } else if (testResult === 'FAILED') {
+    return 'Some tests failed.';
+  } else {
+    return 'Post-decaffeinate tests have not yet been set up for this project.';
+  }
 }
