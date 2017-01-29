@@ -1,5 +1,5 @@
 import commander from 'commander';
-import { exists, mkdtemp } from 'mz/fs';
+import { exists } from 'mz/fs';
 import path from 'path';
 
 import run from './run';
@@ -31,7 +31,10 @@ async function testProject(project) {
   }
 
   let config = require(`../examples/${project}/config`).default;
-  let repoDir = await mkdtemp(`./tmp-projects/${project}-`);
+
+  let suffix = Math.floor(Math.random() * 1000000000000);
+  let repoDir = `./tmp-projects/${project}-${suffix}`;
+  await run(`mkdir ${repoDir}`);
 
   await run(`git clone ${config.cloneUrl} ${repoDir}`);
 
