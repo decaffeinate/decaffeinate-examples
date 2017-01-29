@@ -8,7 +8,7 @@ various open source projects.
 ## Example usage
 
 ```
-npm install -g bulk-decaffeinate decaffeinate eslint
+npm install -g bulk-decaffeinate decaffeinate eslint jscodeshift
 git clone https://github.com/decaffeinate/decaffeinate-examples
 cd decaffeinate-examples
 npm install
