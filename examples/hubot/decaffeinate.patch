@@ -1,0 +1,10 @@
+diff --git a/script/test b/script/test
+index 705a6f5..b1d6e76 100755
+--- a/script/test
++++ b/script/test
+@@ -1,4 +1,4 @@
+ #!/bin/bash
+
+ source script/bootstrap
+-mocha --require coffee-errors --compilers coffee:coffee-script "$@"
++mocha --require coffee-errors --require babel-register --compilers coffee:coffee-script "$@"
