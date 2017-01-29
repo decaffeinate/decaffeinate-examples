@@ -67,6 +67,7 @@ async function testProject(project) {
 }
 
 const DEFAULT_PACKAGES = [
+  'babel-polyfill',
   'babel-preset-env',
   'babel-register',
   'eslint',
