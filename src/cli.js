@@ -37,7 +37,7 @@ async function testProject(project) {
     if (config.extraDependencies.length > 0) {
       await run(`npm install --save-dev ${config.extraDependencies.join(' ')}`);
     }
-    if (exists(`${exampleDir}/decaffeinate.patch`)) {
+    if (await exists(`${exampleDir}/decaffeinate.patch`)) {
       await run(`git apply ${exampleDir}/decaffeinate.patch`);
     }
     await run('git commit -a -m "Add dependencies to prepare for decaffeinate"');
