@@ -3,7 +3,7 @@ node_js:
   - "7"
   - "6"
   - "4"
-before_script:
+before_install:
   - npm install -g bulk-decaffeinate decaffeinate eslint
 env:
   - CXX=g++-4.8
