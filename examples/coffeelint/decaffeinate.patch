@@ -1,0 +1,46 @@
+diff --git a/Cakefile b/Cakefile
+index 040b67f..7545f64 100644
+--- a/Cakefile
++++ b/Cakefile
+@@ -9,8 +9,8 @@ copySync = (src, dest) ->
+     fs.writeFileSync dest, fs.readFileSync(src)
+
+ coffeeSync = (input, output) ->
+-    coffee = fs.readFileSync(input).toString()
+-    fs.writeFileSync output, CoffeeScript.compile(coffee)
++    js = fs.readFileSync(input).toString()
++    fs.writeFileSync output, js
+
+ task 'compile', 'Compile Coffeelint', ->
+     console.log 'Compiling Coffeelint...'
+@@ -19,22 +19,23 @@ task 'compile', 'Compile Coffeelint', ->
+     invoke 'compile:commandline'
+
+ task 'compile:commandline', 'Compiles commandline.js', ->
+-    coffeeSync 'src/commandline.coffee', 'lib/commandline.js'
+-    coffeeSync 'src/configfinder.coffee', 'lib/configfinder.js'
+-    coffeeSync 'src/cache.coffee', 'lib/cache.js'
+-    coffeeSync 'src/ruleLoader.coffee', 'lib/ruleLoader.js'
++    coffeeSync 'src/commandline.js', 'lib/commandline.js'
++    coffeeSync 'src/configfinder.js', 'lib/configfinder.js'
++    coffeeSync 'src/cache.js', 'lib/cache.js'
++    coffeeSync 'src/ruleLoader.js', 'lib/ruleLoader.js'
+     fs.mkdirSync 'lib/reporters' unless fs.existsSync 'lib/reporters'
+-    for src in glob.sync('reporters/*.coffee', { cwd: 'src' })
++    for src in glob.sync('reporters/*.js', { cwd: 'src' })
+         # Slice the "coffee" extension of the end and replace with js
+-        dest = src[...-6] + 'js'
++        dest = src
+         coffeeSync "src/#{src}", "lib/#{dest}"
+
+ task 'compile:browserify', 'Uses browserify to compile coffeelint', ->
+     opts =
+         standalone: 'coffeelint'
+     b = browserify(opts)
+-    b.add [ './src/coffeelint.coffee' ]
++    b.add [ './src/coffeelint.js' ]
+     b.transform require('coffeeify')
++    b.transform require('babelify')
+     b.bundle().pipe fs.createWriteStream('lib/coffeelint.js')
+
+ task 'prepublish', 'Prepublish', ->
