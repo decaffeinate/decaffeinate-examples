@@ -2,6 +2,7 @@ import commander from 'commander';
 import { exists, readdir, readFile, writeFile } from 'mz/fs';
 import path from 'path';
 
+import downloadFile from './downloadFile';
 import run from './run';
 
 export default function cli() {
@@ -106,9 +107,11 @@ async function testProject(project, shouldPublish) {
   let testResult = await runTests(config);
 
   if (shouldPublish) {
+    await downloadFile(getConversionResultBadgeUrl(conversionResult), './conversion-status.svg');
+    await downloadFile(getTestResultBadgeUrl(testResult), './test-status.svg');
     await writeFile('./README.md', getReadme(project, conversionResult, testResult));
     await run('git add -A');
-    await run('git commit -m "Update README with decaffeinate results"');
+    await run('git commit -m "Update README and badges with decaffeinate results"');
     await run('git push fork HEAD:decaffeinate -f');
   }
 
@@ -170,6 +173,9 @@ function getReadme(project, conversionResult, testResult) {
   return `\
 # decaffeinate fork of ${project}
 
+![Conversion Status](https://cdn.rawgit.com/decaffeinate-examples/${project}/decaffeinate/conversion-status.svg)
+![Test Status](https://cdn.rawgit.com/decaffeinate-examples/${project}/decaffeinate/test-status.svg)
+
 ## Conversion results
 
 ${getConversionResultDescription(conversionResult)}
@@ -186,6 +192,32 @@ project using the [decaffeinate] tool.
 [decaffeinate-examples]: https://github.com/decaffeinate/decaffeinate-examples
 [decaffeinate]: https://github.com/decaffeinate/decaffeinate
 `;
+}
+
+function getConversionResultBadgeUrl(conversionResult) {
+  if (conversionResult.passed) {
+    return getBadgeUrl('decaffeinate conversion', 'success', 'brightgreen');
+  } else {
+    return getBadgeUrl(
+      'decaffeinate conversion',
+      `${conversionResult.numErrors}/${conversionResult.numTotal} failed`,
+      'red'
+    );
+  }
+}
+
+function getTestResultBadgeUrl(testResult) {
+  if (testResult === 'PASSED') {
+    return getBadgeUrl('tests', 'passed', 'brightgreen');
+  } else if (testResult === 'FAILED') {
+    return getBadgeUrl('tests', 'failed', 'red');
+  } else {
+    return getBadgeUrl('tests', 'skipped', 'lightgrey');
+  }
+}
+
+function getBadgeUrl(subject, status, color) {
+  return `https://img.shields.io/badge/${encodeURI(subject)}-${encodeURI(status)}-${color}.svg`;
 }
 
 function getConversionResultDescription(conversionResult) {
