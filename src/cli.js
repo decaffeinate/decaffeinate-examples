@@ -78,6 +78,10 @@ async function testProject(project, shouldPublish) {
     }
   }
 
+  if (await exists(`${exampleDir}/.gitignore_extension`)) {
+    await run(`cat ${exampleDir}/.gitignore_extension >> .gitignore`);
+  }
+
   await run('npm install');
   let dependencies = getDependencies(config);
   if (dependencies.length > 0) {

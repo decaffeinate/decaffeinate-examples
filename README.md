@@ -30,6 +30,8 @@ A new project can be added by adding a new subdirectory to the
   reasonable defaults.
 * A `bulk-decaffeinate.config.js` file that will be used for the decaffeinate
   process.
+* Optionally, a `.gitignore_extension` file that is added to the end of the
+  `.gitignore`.
 * A file called `decaffeinate.patch` that applies a patch to the repo so that
   tests can be run in JavaScript using `npm test`.
 
