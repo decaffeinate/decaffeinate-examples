@@ -1,5 +1,7 @@
 # decaffeinate-examples
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/decaffeinate/decaffeinate-examples.svg)](https://greenkeeper.io/)
+
 A tool that can automatically run [decaffeinate] on the latest version of
 various open source projects.
 
