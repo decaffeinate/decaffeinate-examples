@@ -117,6 +117,13 @@ async function testProject(project, shouldPublish) {
     await run('git add -A');
     await run('git commit -m "Update README and badges with decaffeinate results"');
     await run('git push fork HEAD:decaffeinate -f');
+
+    await run('git checkout --orphan gh-pages');
+    await run('git rm --cached -r .');
+    await run('git add conversion-status.svg');
+    await run('git add test-status.svg');
+    await run('git commit -m "Add status SVGs to gh-pages branch"');
+    await run('git push fork HEAD:gh-pages -f');
   }
 
   process.chdir(originalCwd);
@@ -177,8 +184,8 @@ function getReadme(project, conversionResult, testResult) {
   return `\
 # decaffeinate fork of ${project}
 
-![Conversion Status](https://cdn.rawgit.com/decaffeinate-examples/${project}/decaffeinate/conversion-status.svg)
-![Test Status](https://cdn.rawgit.com/decaffeinate-examples/${project}/decaffeinate/test-status.svg)
+![Conversion Status](https://decaffeinate-examples.github.io/${project}/conversion-status.svg)
+![Test Status](https://decaffeinate-examples.github.io/${project}/test-status.svg)
 
 ## Conversion results
 
