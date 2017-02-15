@@ -1,15 +1,20 @@
 diff --git a/Cakefile b/Cakefile
-index 040b67f..7545f64 100644
+index 040b67f..43f8bb8 100644
 --- a/Cakefile
 +++ b/Cakefile
-@@ -9,8 +9,8 @@ copySync = (src, dest) ->
+@@ -1,4 +1,5 @@
+ fs = require 'fs'
++child_process = require 'child_process'
+ glob = require 'glob'
+ path = require 'path'
+ browserify = require 'browserify'
+@@ -9,8 +10,7 @@ copySync = (src, dest) ->
      fs.writeFileSync dest, fs.readFileSync(src)
 
  coffeeSync = (input, output) ->
 -    coffee = fs.readFileSync(input).toString()
 -    fs.writeFileSync output, CoffeeScript.compile(coffee)
-+    js = fs.readFileSync(input).toString()
-+    fs.writeFileSync output, js
++    child_process.execSync("./node_modules/.bin/babel #{input} --out-file #{output}")
 
  task 'compile', 'Compile Coffeelint', ->
      console.log 'Compiling Coffeelint...'
@@ -44,3 +49,38 @@ index 040b67f..7545f64 100644
      b.bundle().pipe fs.createWriteStream('lib/coffeelint.js')
 
  task 'prepublish', 'Prepublish', ->
+diff --git a/bin/coffeelint b/bin/coffeelint
+index 3148fdc..56c21cd 100755
+--- a/bin/coffeelint
++++ b/bin/coffeelint
+@@ -19,6 +19,7 @@ var thisdir = path.dirname(fs.realpathSync(__filename));
+ // I use this so vim runs the newest code while I work on CoffeeLint. -Asa
+ commandline = path.join(thisdir, '..', "lib", "commandline.js");
+ if (!existsFn(commandline)) {
++    require('babel-register');
+     require('coffee-script/register');
+     require('../src/commandline');
+ } else {
+diff --git a/package.json b/package.json
+index 287f170..bbc9419 100644
+--- a/package.json
++++ b/package.json
+@@ -45,7 +45,7 @@
+   "license": "MIT",
+   "scripts": {
+     "pretest": "cake compile",
+-    "test": "./vowsrunner.js --spec test/*.coffee test/*.litcoffee",
++    "test": "./vowsrunner.js --spec test/*.js test/*.litcoffee",
+     "testrule": "npm run compile && ./vowsrunner.js --spec",
+     "posttest": "npm run lint",
+     "prepublish": "cake prepublish",
+diff --git a/vowsrunner.js b/vowsrunner.js
+index 2433979..b589667 100755
+--- a/vowsrunner.js
++++ b/vowsrunner.js
+@@ -1,4 +1,5 @@
+ #!/usr/bin/env node
++require('babel-register')
+ require('coffee-script/register')
+ require('./node_modules/vows/bin/vows')
+

@@ -3,6 +3,7 @@ export default {
   forkUrl: 'git@github.com:decaffeinate-examples/coffeelint.git',
   useDefaultConfig: true,
   extraDependencies: [
+    'babel-cli',
     'babelify',
   ],
 };
