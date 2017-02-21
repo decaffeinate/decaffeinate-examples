@@ -110,12 +110,13 @@ async function testProject(project, shouldPublish) {
   }
   let testResult = await runTests(config);
 
+  await downloadFile(getConversionResultBadgeUrl(conversionResult), './conversion-status.svg');
+  await downloadFile(getTestResultBadgeUrl(testResult), './test-status.svg');
+  await writeFile('./README.md', getReadme(project, conversionResult, testResult));
+  await run('git add -A');
+  await run('git commit -m "Update README and badges with decaffeinate results"');
+
   if (shouldPublish) {
-    await downloadFile(getConversionResultBadgeUrl(conversionResult), './conversion-status.svg');
-    await downloadFile(getTestResultBadgeUrl(testResult), './test-status.svg');
-    await writeFile('./README.md', getReadme(project, conversionResult, testResult));
-    await run('git add -A');
-    await run('git commit -m "Update README and badges with decaffeinate results"');
     await run('git push fork HEAD:decaffeinate -f');
 
     await run('git checkout --orphan gh-pages');
@@ -181,11 +182,17 @@ async function runTests(config) {
 }
 
 function getReadme(project, conversionResult, testResult) {
+  let jobId = process.env.TRAVIS_JOB_ID;
+  let jobMessage = jobId ?
+    `[Travis logs](https://travis-ci.org/decaffeinate/decaffeinate-example-builder/jobs/${jobId})` :
+    '';
   return `\
 # decaffeinate fork of ${project}
 
 ![Conversion Status](https://decaffeinate-examples.github.io/${project}/conversion-status.svg)
 ![Test Status](https://decaffeinate-examples.github.io/${project}/test-status.svg)
+
+${jobMessage}
 
 ## Conversion results
 
