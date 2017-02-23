@@ -174,7 +174,11 @@ async function runTests(config) {
     return 'SKIPPED';
   }
   try {
-    await run('npm test');
+    if (config.testCommand) {
+      await run(config.testCommand);
+    } else {
+      await run('npm test');
+    }
     return 'PASSED';
   } catch (e) {
     return 'FAILED';
