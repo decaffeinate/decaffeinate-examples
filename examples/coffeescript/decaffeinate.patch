@@ -1,0 +1,27 @@
+diff --git a/Cakefile b/Cakefile
+index c9a675fd..dfa0f3e4 100644
+--- a/Cakefile
++++ b/Cakefile
+@@ -217,6 +217,7 @@ task 'bench', 'quick benchmark of compilation time', ->
+ # Run the CoffeeScript test suite.
+ runTests = (CoffeeScript) ->
+   CoffeeScript.register()
++  require 'babel-register'
+   startTime   = Date.now()
+   currentFile = null
+   passedTests = 0
+@@ -282,12 +283,10 @@ runTests = (CoffeeScript) ->
+     '--harmony-generators' in process.execArgv
+   files.splice files.indexOf('generators.coffee'), 1 if not generatorsAreAvailable
+
+-  for file in files when helpers.isCoffee file
+-    literate = helpers.isLiterate file
++  for file in files when file.endsWith('.js')
+     currentFile = filename = path.join 'test', file
+-    code = fs.readFileSync filename
+     try
+-      CoffeeScript.run code.toString(), {filename, literate}
++      require './' + filename
+     catch error
+       failures.push {filename, error}
+   return !failures.length

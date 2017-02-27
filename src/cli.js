@@ -131,6 +131,7 @@ async function testProject(project, shouldPublish) {
 }
 
 const DEFAULT_PACKAGES = [
+  'babel-cli',
   'babel-polyfill',
   'babel-preset-env',
   'babel-register',
