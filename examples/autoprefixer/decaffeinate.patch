@@ -1,5 +1,5 @@
 diff --git a/gulpfile.js b/gulpfile.js
-index c775c97..2c223f2 100644
+index c775c97..ec8d3f9 100644
 --- a/gulpfile.js
 +++ b/gulpfile.js
 @@ -1,3 +1,4 @@
@@ -24,7 +24,7 @@ index c775c97..2c223f2 100644
 
      var mocha = require('gulp-mocha');
 -    return gulp.src('test/*.coffee', { read: false }).pipe(mocha());
-+    return gulp.src('test/*.js', { read: false }).pipe(mocha());
++    return gulp.src('test/*.js', { read: false }).pipe(mocha({ timeout: 10000 }));
  });
 
  gulp.task('default', ['lint', 'test']);
