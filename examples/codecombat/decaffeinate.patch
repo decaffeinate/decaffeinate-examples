@@ -1,0 +1,182 @@
+diff --git a/app/views/TestView.js b/app/views/TestView.js
+index fdf720fa4..8317569a6 100644
+--- a/app/views/TestView.js
++++ b/app/views/TestView.js
+@@ -23,6 +23,7 @@ const template = require('templates/test-view');
+ const requireUtils = require('lib/requireUtils');
+ const storage = require('core/storage');
+
++require('vendor/polyfill');
+ require('vendor/jasmine-bundle');
+ require('tests');
+
+diff --git a/brunch-static-stuff.js b/brunch-static-stuff.js
+index 6daa7a2d6..3f3fe14c3 100644
+--- a/brunch-static-stuff.js
++++ b/brunch-static-stuff.js
+@@ -81,7 +81,7 @@ class BrunchStaticStuff {
+       return i.text(t.text);
+     });
+
+-    const deps = ['static-mock.coffee'].concat(out.dependencies);
++    const deps = ['static-mock.js'].concat(out.dependencies);
+     console.log(`Wrote to ${outFile}`, deps);
+
+     return cb(null, [{ filename: outFile, content: c.html() }], deps);
+diff --git a/config.js b/config.js
+index 561b02868..6595249a8 100644
+--- a/config.js
++++ b/config.js
+@@ -73,7 +73,7 @@ exports.config = {
+           pattern: /\A\Z/,
+         },
+         afterBrunch: [
+-          'coffee scripts/minify.coffee',
++          'babel-node scripts/minify.js',
+         ],
+       },
+     },
+@@ -112,11 +112,11 @@ exports.config = {
+           regJoin('^app/collections'),
+           regJoin('^app/core'),
+           regJoin('^app/views/core'),
+-          'app/locale/locale.coffee',
+-          'app/locale/en.coffee',
+-          'app/locale/en-US.coffee',
+-          'app/lib/sprites/SpriteBuilder.coffee', // loaded by ThangType
+-          'app/views/HomeView.coffee',
++          'app/locale/locale.js',
++          'app/locale/en.js',
++          'app/locale/en-US.js',
++          'app/lib/sprites/SpriteBuilder.js', // loaded by ThangType
++          'app/views/HomeView.js',
+         ],
+
+         // - Karma is a bit more tricky to get to work. For now just dump everything into one file so it doesn't need to load anything through ModuleLoader.
+@@ -139,8 +139,8 @@ exports.config = {
+         // - world.js, used by the worker to generate the world in game
+         'javascripts/world.js': [
+           regJoin('^app/lib/world(?!/test)'),
+-          regJoin('^app/core/CocoClass.coffee'),
+-          regJoin('^app/core/utils.coffee'),
++          regJoin('^app/core/CocoClass.js'),
++          regJoin('^app/core/utils.js'),
+           regJoin('^vendor/scripts/Box2dWeb-2.1.a.3'),
+           regJoin('^vendor/scripts/string_score.js'),
+           regJoin('^bower_components/underscore.string'),
+@@ -152,6 +152,7 @@ exports.config = {
+           regJoin(`^vendor/scripts/(?!(Box2d|coffeescript|difflib|diffview|jasmine|co|${gameLibraries}))`),
+           regJoin(`^bower_components/(?!(aether|d3|treema|three.js|esper.js|jquery-ui|${gameLibraries}))`),
+           'bower_components/treema/treema-utils.js',
++          'node_modules/babel-polyfill/polyfill.js',
+         ],
+
+         'javascripts/game-libraries.js': [
+@@ -163,6 +164,7 @@ exports.config = {
+         'javascripts/whole-vendor.js': TRAVIS ? [
+           regJoin('^vendor/scripts/(?!(Box2d|jasmine|register-game-libraries))'),
+           regJoin('^bower_components/(?!aether|esper.js)'),
++          'node_modules/babel-polyfill/polyfill.js',
+         ] : [],
+
+         // - Other vendor libraries in separate bunches
+@@ -186,6 +188,7 @@ exports.config = {
+         'javascripts/app/vendor/coffeescript.js': 'vendor/scripts/coffeescript.js',
+         'javascripts/app/vendor/difflib.js': 'vendor/scripts/difflib.js',
+         'javascripts/app/vendor/diffview.js': 'vendor/scripts/diffview.js',
++        'javascripts/app/vendor/polyfill.js': 'node_modules/babel-polyfill/polyfill.js',
+         'javascripts/app/vendor/treema.js': 'bower_components/treema/treema.js',
+         'javascripts/app/vendor/jasmine-bundle.js': regJoin('^vendor/scripts/jasmine'),
+         'javascripts/app/vendor/jasmine-mock-ajax.js': 'vendor/scripts/jasmine-mock-ajax.js',
+@@ -265,6 +268,9 @@ exports.config = {
+   framework: 'backbone',
+
+   plugins: {
++    babel: {
++      presets: ['env'],
++    },
+     coffeelint: {
+       pattern: /^app\/.*\.coffee$/,
+       options: {
+@@ -319,6 +325,7 @@ exports.config = {
+
+ const dirStack = ['./app'];
+ const coffeeFiles = [];
++const jsFiles = [];
+ const jadeFiles = [];
+
+ while (dirStack.length) {
+@@ -331,6 +338,8 @@ while (dirStack.length) {
+       dirStack.push(fullPath);
+     } else if (_.str.endsWith(file, '.coffee')) {
+       coffeeFiles.push(fullPath);
++    } else if (_.str.endsWith(file, '.js')) {
++      jsFiles.push(fullPath);
+     } else if (_.str.endsWith(file, '.jade')) {
+       jadeFiles.push(fullPath);
+     }
+@@ -343,6 +352,12 @@ for (file of Array.from(coffeeFiles)) {
+   exports.config.files.javascripts.joinTo[outputFile] = inputFile;
+ }
+
++for (file of Array.from(jsFiles)) {
++  inputFile = file.replace('./app', 'app');
++  outputFile = file.replace('./app', 'javascripts/app');
++  exports.config.files.javascripts.joinTo[outputFile] = inputFile;
++}
++
+ let numBundles = 0;
+
+ for (file of Array.from(jadeFiles)) {
+@@ -361,7 +376,7 @@ for (file of Array.from(jadeFiles)) {
+   }
+ }
+
+-console.log(`Got ${coffeeFiles.length} coffee files and ${jadeFiles.length} jade files (bundled ${numBundles} of them together).`);
++console.log(`Got ${coffeeFiles.length} coffee files and ${jsFiles.length} js files  and ${jadeFiles.length} jade files (bundled ${numBundles} of them together).`);
+
+ if (process.env.GIT_SHA) {
+   const info =
+diff --git a/index.js b/index.js
+index 3abc77f62..71f6d4a95 100644
+--- a/index.js
++++ b/index.js
+@@ -8,5 +8,7 @@ if (majorVersion === 4) {
+ }
+ require('coffee-script');
+ require('coffee-script/register');
++require('babel-register');
++require('babel-polyfill');
+ var server = require('./server');
+ server.startServer();
+diff --git a/package.json b/package.json
+index 3af818a55..c3985f132 100644
+--- a/package.json
++++ b/package.json
+@@ -33,10 +33,10 @@
+     "test": "./node_modules/.bin/karma start",
+     "predeploy": "echo Starting deployment--hold onto your butts.; echo Skipping brunch build --production",
+     "postdeploy": "echo Deployed. Unclench.",
+-    "postinstall": "bower install && brunch build --env fast",
+-    "brunch": "brunch",
++    "postinstall": "bower install && babel-node ./node_modules/.bin/brunch build --env fast",
++    "brunch": "babel-node ./node_modules/.bin/brunch",
+     "bower": "bower",
+-    "dev": "brunch watch --server --env fast",
++    "dev": "babel-node ./node_modules/.bin/brunch watch --server --env fast",
+     "nodemon": "nodemon",
+     "jasmine-node": "jasmine-node",
+     "multicore": "coffee multicore.coffee",
+diff --git a/spec/helpers/helper.js b/spec/helpers/helper.js
+index c7e01170a..6d9c7d9c9 100644
+--- a/spec/helpers/helper.js
++++ b/spec/helpers/helper.js
+@@ -2,6 +2,8 @@ var _ = require('lodash');
+
+ require('coffee-script');
+ require('coffee-script/register');
++require('babel-register');
++require("babel-polyfill");
+
+ var oldIt = global.it;
+ global.it = function(description, testFn) {
