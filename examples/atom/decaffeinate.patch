@@ -1,0 +1,26 @@
+diff --git a/static/babelrc.json b/static/babelrc.json
+index 11474dd8d..cbbb5b716 100644
+--- a/static/babelrc.json
++++ b/static/babelrc.json
+@@ -11,6 +11,7 @@
+     ["transform-function-bind", {}],
+     ["transform-object-rest-spread", {}],
+     ["transform-flow-strip-types", {}],
+-    ["transform-react-jsx", {}]
++    ["transform-react-jsx", {}],
++    ["transform-es2015-classes", {}]
+   ]
+ }
+diff --git a/static/index.html b/static/index.html
+index 39c7d80c1..8d2c85de4 100644
+--- a/static/index.html
++++ b/static/index.html
+@@ -1,7 +1,7 @@
+ <!DOCTYPE html>
+ <html>
+ <head>
+-  <meta http-equiv="Content-Security-Policy" content="default-src *; img-src blob: data: *; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src blob: data: mediastream: *;">
++  <meta http-equiv="Content-Security-Policy" content="default-src *; img-src blob: data: *; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src blob: data: mediastream: *;">
+   <script src="index.js"></script>
+ </head>
+ <body tabindex="-1">
