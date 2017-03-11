@@ -25,3 +25,18 @@ index c9a675fd..dfa0f3e4 100644
      catch error
        failures.push {filename, error}
    return !failures.length
+diff --git a/test/cluster.js b/test/cluster.js
+index 706ca0d5..07f9fd64 100644
+--- a/test/cluster.js
++++ b/test/cluster.js
+@@ -8,6 +8,10 @@
+ 
+ if (typeof testingBrowser !== 'undefined' && testingBrowser !== null) { return; }
+
++// CoffeeScript overwrites process.argv, which this test depends on, so manually
++// overwrite it instead.
++process.argv[1] = __filename;
++
+ const cluster = require('cluster');
+
+ if (cluster.isMaster) {
