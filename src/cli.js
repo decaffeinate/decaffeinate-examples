@@ -90,7 +90,7 @@ async function testProject(project, shouldPublish) {
   await run('git add -A');
   await run('git commit -m "Add dependencies and config to prepare for decaffeinate"');
 
-  let conversionResult = await checkConversion();
+  let conversionResult = await checkConversion(config);
   if (!conversionResult.passed) {
     await run('git add -A');
     await run('git commit -m "Save decaffeinate error details"');
@@ -151,13 +151,16 @@ function getDependencies(config) {
   return dependencies;
 }
 
-async function checkConversion() {
+async function checkConversion(config) {
   await run('bulk-decaffeinate check');
   let hasErrorFile = await exists('./decaffeinate-errors.log');
   if (hasErrorFile) {
     let results = JSON.parse((await readFile('decaffeinate-results.json')).toString());
     let numErrors = results.filter(result => result.error).length;
     let numTotal = results.length;
+    if (config.expectConversionSuccess) {
+      process.exitCode = 1;
+    }
     return {
       passed: false,
       numErrors,
@@ -182,6 +185,9 @@ async function runTests(config) {
     }
     return 'PASSED';
   } catch (e) {
+    if (config.expectTestSuccess) {
+      process.exitCode = 1;
+    }
     return 'FAILED';
   }
 }

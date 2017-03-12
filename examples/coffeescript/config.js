@@ -6,4 +6,6 @@ export default {
   // This doesn't cover all tests, just some of them, so don't mark as
   // successful yet.
   testCommand: 'bin/cake test && `exit 1`',
+  expectConversionSuccess: true,
+  expectTestSuccess: false,
 };
