@@ -5,4 +5,6 @@ export default {
   extraDependencies: [
     'babelify',
   ],
+  expectConversionSuccess: true,
+  expectTestSuccess: true,
 };

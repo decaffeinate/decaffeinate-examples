@@ -3,4 +3,6 @@ export default {
   forkUrl: 'git@github.com:decaffeinate-examples/codecombat.git',
   useDefaultConfig: true,
   skipTests: true,
+  expectConversionSuccess: true,
+  expectTestSuccess: false,
 };
