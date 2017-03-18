@@ -1,16 +1,3 @@
-diff --git a/static/babelrc.json b/static/babelrc.json
-index 11474dd8d..cbbb5b716 100644
---- a/static/babelrc.json
-+++ b/static/babelrc.json
-@@ -11,6 +11,7 @@
-     ["transform-function-bind", {}],
-     ["transform-object-rest-spread", {}],
-     ["transform-flow-strip-types", {}],
--    ["transform-react-jsx", {}]
-+    ["transform-react-jsx", {}],
-+    ["transform-es2015-classes", {}]
-   ]
- }
 diff --git a/static/index.html b/static/index.html
 index 39c7d80c1..8d2c85de4 100644
 --- a/static/index.html
