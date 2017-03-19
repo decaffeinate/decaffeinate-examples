@@ -5,6 +5,7 @@ export default {
   testCommand: `
     set -e
     script/clean
+    npm install
     script/build --create-debian-package --create-rpm-package --compress-artifacts
     script/test
   `,
