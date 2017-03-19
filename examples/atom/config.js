@@ -8,10 +8,6 @@ export default {
     if [ -e /sbin/start-stop-daemon ]; then
       /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
     fi
-    git clone https://github.com/creationix/nvm.git /tmp/.nvm
-    source /tmp/.nvm/nvm.sh
-    nvm install $NODE_VERSION
-    nvm use --delete-prefix $NODE_VERSION
     script/build --create-debian-package --create-rpm-package --compress-artifacts
     script/test
   `,
