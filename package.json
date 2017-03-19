@@ -16,6 +16,5 @@
     "eslint": "^3.14.1",
     "eslint-plugin-babel": "^4.0.1",
     "mz": "^2.6.0",
-    "pty.js": "^0.3.1"
   }
 }
