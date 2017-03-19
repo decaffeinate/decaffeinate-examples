@@ -29,6 +29,37 @@ index 195938fe2..0bd70ea8d 100644
        expect(error.foo).toBe('bar');
        return expect(Array.isArray(error.getRawStack())).toBe(true);
      });
+diff --git a/spec/config-spec.js b/spec/config-spec.js
+index ce692e025..61be5ad3d 100644
+--- a/spec/config-spec.js
++++ b/spec/config-spec.js
+@@ -1314,7 +1314,7 @@ foo:
+             expect(fs.existsSync(atom.config.configDirPath)).toBeTruthy();
+             expect(fs.existsSync(path.join(atom.config.configDirPath, 'packages'))).toBeTruthy();
+             expect(fs.isFileSync(path.join(atom.config.configDirPath, 'snippets.cson'))).toBeTruthy();
+-            expect(fs.isFileSync(path.join(atom.config.configDirPath, 'init.coffee'))).toBeTruthy();
++            expect(fs.isFileSync(path.join(atom.config.configDirPath, 'init.js'))).toBeTruthy();
+             return expect(fs.isFileSync(path.join(atom.config.configDirPath, 'styles.less'))).toBeTruthy();
+           });
+         }),
+diff --git a/spec/integration/helpers/start-atom.js b/spec/integration/helpers/start-atom.js
+index a62f5604a..158df1fed 100644
+--- a/spec/integration/helpers/start-atom.js
++++ b/spec/integration/helpers/start-atom.js
+@@ -110,7 +110,12 @@ const buildAtomClient = function (args, env) {
+         .windowHandles(cb);
+     }).addCommand('waitForPaneItemCount', function (count, timeout, cb) {
+       return this.waitUntil(function () {
+-        return this.execute(() => __guard__(atom.workspace != null ? atom.workspace.getActivePane() : undefined, x => x.getItems().length))
++        return this.execute(() => {
++          function __guard__(value, transform) {
++            return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
++          }
++          return __guard__(atom.workspace != null ? atom.workspace.getActivePane() : undefined, x => x.getItems().length)
++        })
+           .then(({ value }) => value === count);
+       }
+       , timeout)
 diff --git a/static/index.html b/static/index.html
 index 39c7d80c1..8d2c85de4 100644
 --- a/static/index.html
