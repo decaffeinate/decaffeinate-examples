@@ -4,7 +4,6 @@ export default {
   useDefaultConfig: true,
   testCommand: `
     set -e
-    script/clean
     script/build --create-debian-package --create-rpm-package --compress-artifacts
     script/test
   `,
