@@ -25,12 +25,38 @@ index c9a675fd..dfa0f3e4 100644
      catch error
        failures.push {filename, error}
    return !failures.length
+diff --git a/check-coffeescript-examples.sh b/check-coffeescript-examples.sh
+new file mode 100755
+index 00000000..7638b145
+--- /dev/null
++++ b/check-coffeescript-examples.sh
+@@ -0,0 +1,20 @@
++#!/bin/bash
++
++# Simple shell script to compare the decaffeinated CoffeeScript 1.10.0 compiler
++# with the official run, running it on all CoffeeScript files in the repo and
++# making sure the output is the same. For now, it just fails on the first error.
++
++set -e
++
++rm -rf examples-tmp
++mkdir examples-tmp
++cd examples-tmp
++git clone https://github.com/jashkenas/coffeescript.git --branch 1.10.0
++
++for path in $(find coffeescript -name '*.coffee'); do
++  echo "Comparing ${path}..."
++  (./coffeescript/bin/coffee --compile --print ${path} || echo 'ERROR') > expected.js
++  (../bin/coffee --compile --print ${path} || echo 'ERROR') > actual.js
++  cmp expected.js actual.js
++  echo 'Passed!'
++done
 diff --git a/test/cluster.js b/test/cluster.js
 index 706ca0d5..07f9fd64 100644
 --- a/test/cluster.js
 +++ b/test/cluster.js
 @@ -8,6 +8,10 @@
- 
+
  if (typeof testingBrowser !== 'undefined' && testingBrowser !== null) { return; }
 
 +// CoffeeScript overwrites process.argv, which this test depends on, so manually
