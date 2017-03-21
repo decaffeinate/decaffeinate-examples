@@ -1,7 +1,7 @@
-diff --git a/Cakefile b/Cakefile
-index c9a675fd..dfa0f3e4 100644
---- a/Cakefile
-+++ b/Cakefile
+diff --git c/Cakefile w/Cakefile
+index c9a675f..728c896 100644
+--- c/Cakefile
++++ w/Cakefile
 @@ -217,6 +217,7 @@ task 'bench', 'quick benchmark of compilation time', ->
  # Run the CoffeeScript test suite.
  runTests = (CoffeeScript) ->
@@ -10,7 +10,7 @@ index c9a675fd..dfa0f3e4 100644
    startTime   = Date.now()
    currentFile = null
    passedTests = 0
-@@ -282,12 +283,10 @@ runTests = (CoffeeScript) ->
+@@ -282,19 +283,20 @@ runTests = (CoffeeScript) ->
      '--harmony-generators' in process.execArgv
    files.splice files.indexOf('generators.coffee'), 1 if not generatorsAreAvailable
 
@@ -25,11 +25,22 @@ index c9a675fd..dfa0f3e4 100644
      catch error
        failures.push {filename, error}
    return !failures.length
-diff --git a/check-coffeescript-examples.sh b/check-coffeescript-examples.sh
+
+
+ task 'test', 'run the CoffeeScript language test suite', ->
+-  runTests CoffeeScript
++  success = runTests CoffeeScript
++  if !success
++    process.exitCode = 1
++  return
+
+
+ task 'test:browser', 'run the test suite against the merged browser script', ->
+diff --git c/check-coffeescript-examples.sh w/check-coffeescript-examples.sh
 new file mode 100755
-index 00000000..7638b145
+index 0000000..7638b14
 --- /dev/null
-+++ b/check-coffeescript-examples.sh
++++ w/check-coffeescript-examples.sh
 @@ -0,0 +1,20 @@
 +#!/bin/bash
 +
@@ -51,10 +62,10 @@ index 00000000..7638b145
 +  cmp expected.js actual.js
 +  echo 'Passed!'
 +done
-diff --git a/test/cluster.js b/test/cluster.js
-index 706ca0d5..07f9fd64 100644
---- a/test/cluster.js
-+++ b/test/cluster.js
+diff --git c/test/cluster.js w/test/cluster.js
+index 706ca0d..07f9fd6 100644
+--- c/test/cluster.js
++++ w/test/cluster.js
 @@ -8,6 +8,10 @@
 
  if (typeof testingBrowser !== 'undefined' && testingBrowser !== null) { return; }
