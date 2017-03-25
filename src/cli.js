@@ -64,6 +64,9 @@ async function testProject(project, shouldPublish) {
   if (await exists(`${exampleDir}/bulk-decaffeinate.config.js`)) {
     await run(`cp ${exampleDir}/bulk-decaffeinate.config.js ${repoDir}`);
   }
+  if (await exists(`${exampleDir}/.eslintrc.js`)) {
+    await run(`cp ${exampleDir}/.eslintrc.js ${repoDir}`);
+  }
 
   process.chdir(repoDir);
 
