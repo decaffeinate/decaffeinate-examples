@@ -2,6 +2,11 @@ export default {
   cloneUrl: 'https://github.com/atom/atom.git',
   forkUrl: 'git@github.com:decaffeinate-examples/atom.git',
   useDefaultConfig: true,
+  extraDependencies: [
+    'eslint-config-standard',
+    'eslint-plugin-promise',
+    'eslint-plugin-standard',
+  ],
   testCommand: `
     set -e
     rm -rf node_modules

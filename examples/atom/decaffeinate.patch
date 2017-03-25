@@ -1,63 +1,63 @@
 diff --git a/spec/compile-cache-spec.js b/spec/compile-cache-spec.js
-index 195938fe2..0bd70ea8d 100644
+index 127ef6a26..16b191207 100644
 --- a/spec/compile-cache-spec.js
 +++ b/spec/compile-cache-spec.js
-@@ -110,7 +110,7 @@ describe('CompileCache', () => {
-       waits(1);
-       return runs(() => {
-         error = new Error('Oops again');
--        expect(error.stack).toContain('compile-cache-spec.coffee');
-+        expect(error.stack).toContain('compile-cache-spec.js');
-         return expect(Array.isArray(error.getRawStack())).toBe(true);
-       });
-     });
-@@ -122,7 +122,7 @@ describe('CompileCache', () => {
-       Error.prepareStackTrace = originalPrepareStackTrace;
+@@ -107,7 +107,7 @@ describe('CompileCache', function () {
+       waits(1)
+       return runs(function () {
+         error = new Error('Oops again')
+-        expect(error.stack).toContain('compile-cache-spec.coffee')
++        expect(error.stack).toContain('compile-cache-spec.js')
+         return expect(Array.isArray(error.getRawStack())).toBe(true)
+       })
+     })
+@@ -119,7 +119,7 @@ describe('CompileCache', function () {
+       Error.prepareStackTrace = originalPrepareStackTrace
 
-       const error = new Error('Oops');
--      expect(error.stack).toContain('compile-cache-spec.coffee');
-+      expect(error.stack).toContain('compile-cache-spec.js');
-       return expect(Array.isArray(error.getRawStack())).toBe(true);
-     });
+       const error = new Error('Oops')
+-      expect(error.stack).toContain('compile-cache-spec.coffee')
++      expect(error.stack).toContain('compile-cache-spec.js')
+       return expect(Array.isArray(error.getRawStack())).toBe(true)
+     })
 
-@@ -135,7 +135,7 @@ describe('CompileCache', () => {
-       };
+@@ -132,7 +132,7 @@ describe('CompileCache', function () {
+       }
 
-       const error = new Error('Oops');
--      expect(error.stack).toContain('compile-cache-spec.coffee');
-+      expect(error.stack).toContain('compile-cache-spec.js');
-       expect(error.foo).toBe('bar');
-       return expect(Array.isArray(error.getRawStack())).toBe(true);
-     });
+       const error = new Error('Oops')
+-      expect(error.stack).toContain('compile-cache-spec.coffee')
++      expect(error.stack).toContain('compile-cache-spec.js')
+       expect(error.foo).toBe('bar')
+       return expect(Array.isArray(error.getRawStack())).toBe(true)
+     })
 diff --git a/spec/config-spec.js b/spec/config-spec.js
-index ce692e025..61be5ad3d 100644
+index 6c3592573..01d46c057 100644
 --- a/spec/config-spec.js
 +++ b/spec/config-spec.js
-@@ -1314,7 +1314,7 @@ foo:
-             expect(fs.existsSync(atom.config.configDirPath)).toBeTruthy();
-             expect(fs.existsSync(path.join(atom.config.configDirPath, 'packages'))).toBeTruthy();
-             expect(fs.isFileSync(path.join(atom.config.configDirPath, 'snippets.cson'))).toBeTruthy();
--            expect(fs.isFileSync(path.join(atom.config.configDirPath, 'init.coffee'))).toBeTruthy();
-+            expect(fs.isFileSync(path.join(atom.config.configDirPath, 'init.js'))).toBeTruthy();
-             return expect(fs.isFileSync(path.join(atom.config.configDirPath, 'styles.less'))).toBeTruthy();
-           });
-         }),
+@@ -1310,7 +1310,7 @@ foo:
+             expect(fs.existsSync(atom.config.configDirPath)).toBeTruthy()
+             expect(fs.existsSync(path.join(atom.config.configDirPath, 'packages'))).toBeTruthy()
+             expect(fs.isFileSync(path.join(atom.config.configDirPath, 'snippets.cson'))).toBeTruthy()
+-            expect(fs.isFileSync(path.join(atom.config.configDirPath, 'init.coffee'))).toBeTruthy()
++            expect(fs.isFileSync(path.join(atom.config.configDirPath, 'init.js'))).toBeTruthy()
+             return expect(fs.isFileSync(path.join(atom.config.configDirPath, 'styles.less'))).toBeTruthy()
+           })
+         })
 diff --git a/spec/integration/helpers/start-atom.js b/spec/integration/helpers/start-atom.js
-index a62f5604a..158df1fed 100644
+index 5b17dc9eb..2ace0d052 100644
 --- a/spec/integration/helpers/start-atom.js
 +++ b/spec/integration/helpers/start-atom.js
-@@ -110,7 +110,12 @@ const buildAtomClient = function (args, env) {
-         .windowHandles(cb);
+@@ -105,7 +105,12 @@ const buildAtomClient = function (args, env) {
+         .windowHandles(cb)
      }).addCommand('waitForPaneItemCount', function (count, timeout, cb) {
        return this.waitUntil(function () {
 -        return this.execute(() => __guard__(atom.workspace != null ? atom.workspace.getActivePane() : undefined, x => x.getItems().length))
 +        return this.execute(() => {
-+          function __guard__(value, transform) {
-+            return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
++          function __guard__ (value, transform) {
++            return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined
 +          }
 +          return __guard__(atom.workspace != null ? atom.workspace.getActivePane() : undefined, x => x.getItems().length)
 +        })
-           .then(({ value }) => value === count);
+           .then(({value}) => value === count)
        }
        , timeout)
 diff --git a/static/index.html b/static/index.html
