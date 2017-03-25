@@ -55,8 +55,18 @@ async function testProject(project, shouldPublish) {
   let repoDir = `./tmp-projects/${project}-${suffix}`;
   await run(`mkdir ${repoDir}`);
 
-  let cloneSuffix = config.branch ? `--branch ${config.branch}` : '';
-  await run(`git clone --depth=1 ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
+  // As a special case, allow an example consisting of multiple project (like
+  // all CoffeeScript projects in the atom org). In this case, we make a fresh
+  // repo with the contents of other cloned repos.
+  if (config.isMultiProject) {
+    for (let {url, name} of config.cloneRepos) {
+      await run(`git clone --depth=1 ${url} ${repoDir}/${name}`);
+      await run(`rm -rf ${repoDir}/${name}/.git`);
+    }
+  } else {
+    let cloneSuffix = config.branch ? `--branch ${config.branch}` : '';
+    await run(`git clone --depth=1 ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
+  }
 
   if (config.useDefaultConfig) {
     await run(`cp -R ./default-config/. ${repoDir}`);
@@ -76,13 +86,19 @@ async function testProject(project, shouldPublish) {
 
   process.chdir(repoDir);
 
+  if (config.isMultiProject) {
+    await run(`git init`);
+    await run(`git add -A`);
+    await run(`git commit -m "Initial commit"`);
+  }
+
   if (shouldPublish) {
     await run(`git remote add fork ${config.forkUrl}`);
     await run('git fetch fork');
     // If we're using a custom branch/ref, it may not be valid to push to it, so
     // skip this step. (Currently this fits all use cases, but it can be made
     // more flexible later if necessary.)
-    if (!config.branch) {
+    if (!config.branch && !config.isMultiProject) {
       await run('git push fork');
     }
   }
