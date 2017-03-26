@@ -67,8 +67,8 @@ async function testProject(project, shouldPublish) {
   if (await exists(`${exampleDir}/.eslintrc.js`)) {
     await run(`cp ${exampleDir}/.eslintrc.js ${repoDir}`);
   }
-  if (await exists(`${exampleDir}/.babelrc`)) {
-    await run(`cp ${exampleDir}/.babelrc ${repoDir}`);
+  if (await exists(`${exampleDir}/babelrc`)) {
+    await run(`cp ${exampleDir}/babelrc ${repoDir}/.babelrc`);
   }
   if (await exists(`${exampleDir}/package.json`)) {
     await run(`cp ${exampleDir}/package.json ${repoDir}`);
