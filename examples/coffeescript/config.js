@@ -3,8 +3,9 @@ export default {
   forkUrl: 'git@github.com:decaffeinate-examples/coffeescript.git',
   branch: '1.10.0',
   useDefaultConfig: true,
-  // This doesn't cover all tests, just some of them, so don't mark as
-  // successful yet.
+  extraDependencies: [
+    'babel-plugin-transform-remove-strict-mode',
+  ],
   testCommand: `
     set -e
     ./node_modules/.bin/babel src -d lib/coffee-script
