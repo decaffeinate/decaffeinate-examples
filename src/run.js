@@ -10,7 +10,7 @@ import { spawn } from 'child_process';
 export default function run(command) {
   console.log(`> ${command}`);
   return new Promise((resolve, reject) => {
-    let childProcess = spawn('/bin/sh', ['-c', command], {stdio: 'inherit'});
+    let childProcess = spawn('/bin/bash', ['-c', command], {stdio: 'inherit'});
     childProcess.on('close', code => {
       if (code === 0) {
         resolve();
