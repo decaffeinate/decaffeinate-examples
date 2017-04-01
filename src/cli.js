@@ -94,7 +94,7 @@ async function testProject(project, shouldPublish) {
   await run('npm install');
   let dependencies = getDependencies(config);
   if (dependencies.length > 0) {
-    await run(`npm install --save-dev ${dependencies.join(' ')}`);
+    await run(`npm install --save-dev --save-exact ${dependencies.join(' ')}`);
   }
   await run('git add -A');
   await run('git commit -m "Add dependencies and config to prepare for decaffeinate"');
