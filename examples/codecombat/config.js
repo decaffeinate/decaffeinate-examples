@@ -8,11 +8,16 @@ export default {
   ],
   testCommand: `
     set -e
+    set -x
     export COCO_TRAVIS_TEST=1
     export DISPLAY=:99.0
     if [ -e /etc/init.d/xvfb ]; then
       sh -e /etc/init.d/xvfb start
     fi
+    if [ -e ~/.nvm/nvm.sh ]; then
+      source ~/.nvm/nvm.sh
+    fi
+    nvm install 5.1.1
     rm -rf node_modules
     rm -rf bower-components
     rm -rf public
