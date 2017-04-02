@@ -8,7 +8,6 @@ export default {
   ],
   testCommand: `
     set -e
-    set -x
     export COCO_TRAVIS_TEST=1
     export DISPLAY=:99.0
     if [ -e /etc/init.d/xvfb ]; then
