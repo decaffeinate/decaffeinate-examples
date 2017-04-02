@@ -1,5 +1,19 @@
+diff --git a/.babelrc b/.babelrc
+index 164185f69..4275f9e0b 100644
+--- a/.babelrc
++++ b/.babelrc
+@@ -3,5 +3,8 @@
+   "plugins": ["transform-remove-strict-mode"],
+   "parserOpts": {
+     "allowReturnOutsideFunction": true
+-  }
++  },
++  "ignore": [
++    "bower_components"
++  ]
+ }
 diff --git a/app/views/TestView.js b/app/views/TestView.js
-index fdf720fa4..8317569a6 100644
+index 8c6f3bded..a758edb40 100644
 --- a/app/views/TestView.js
 +++ b/app/views/TestView.js
 @@ -23,6 +23,7 @@ const template = require('templates/test-view');
