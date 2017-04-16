@@ -9,7 +9,7 @@ export default {
   expectTestSuccess: true,
   testCommand: `
     set -e
-    find src -name '*.js' | xargs sed -i '' -e 's/\\/\\/ @require\\(.*\\)$/\\/* @require\\1 *\\//g'
+    find src -name '*.js' | xargs sed -i -e 's/\\/\\/ @require\\(.*\\)$/\\/* @require\\1 *\\//g'
     git commit -a -m 'Change catty dependencies to have the proper format'
     
     npm run build
