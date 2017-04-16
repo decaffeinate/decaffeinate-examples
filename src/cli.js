@@ -99,6 +99,10 @@ async function testProject(project, shouldPublish) {
   await run('git add -A');
   await run('git commit -m "Add dependencies and config to prepare for decaffeinate"');
 
+  if (config.beforeDecaffeinateScript) {
+    await run(config.beforeDecaffeinateScript);
+  }
+
   let conversionResult = await checkConversion(config);
   if (!conversionResult.passed) {
     await run('git add -A');
