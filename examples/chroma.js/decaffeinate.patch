@@ -1,0 +1,117 @@
+diff --git a/Gruntfile.js b/Gruntfile.js
+index a8b07d4..6cc84bf 100644
+--- a/Gruntfile.js
++++ b/Gruntfile.js
+@@ -9,23 +9,9 @@ module.exports = function(grunt) {
+     clean: {
+       pre: [
+         'chroma.js',
+-        'chroma.min.js',
+-        'license.coffee',
++        'license.js',
+       ],
+-      post: ['chroma.coffee']
+-    },
+-    coffee: {
+-      compile: {
+-        options: {
+-          join: true
+-        },
+-        files: {
+-          'chroma.js': [
+-            'license.coffee',
+-            'chroma.coffee'
+-          ],
+-        },
+-      }
++      post: []
+     },
+     replace: {
+       dist: {
+@@ -33,16 +19,6 @@ module.exports = function(grunt) {
+         files: [{expand: true, flatten: true, src: ['chroma.js'], dest: '.'}]
+       }
+     },
+-    uglify: {
+-      options: {
+-        banner: "/*\n" + fs.readFileSync("LICENSE", {encoding: "utf8"}) + "\n*/\n",
+-      },
+-      my_target: {
+-        files: {
+-          'chroma.min.js': ['chroma.js']
+-        },
+-      },
+-    },
+     copy: {
+       main: {
+         files: [
+@@ -61,24 +37,23 @@ module.exports = function(grunt) {
+
+   grunt.registerTask('license', function() {
+     var license = [
+-      "###*",
++      "/**",
+       " * @license",
+       " *",
+     ].concat(fs.readFileSync('LICENSE', {encoding: "utf8"}).split("\n").map(function(line) {
+       return " * " + line;
+     }));
+-    license.push("###\n");
+-    fs.writeFileSync('license.coffee', license.join("\n"));
++    license.push("*/\n");
++    fs.writeFileSync('license.js', license.join("\n"));
+   });
+
+   grunt.registerTask('catty', function() {
+     require("catty")({ global: true })
+-      .coffee(true)
+       .addLibrary("src")
+-      .cat("src/index.coffee", "./chroma.coffee");
++      .cat("src/index.js", "./chroma.js");
+   });
+
+-  grunt.registerTask('default', ['clean:pre', 'license', 'catty', 'coffee', 'replace',
+-    'uglify', 'copy', 'clean:post']);
++  grunt.registerTask('default', ['clean:pre', 'license', 'catty', 'replace',
++    'copy', 'clean:post']);
+ };
+
+diff --git a/package.json b/package.json
+index 7ec0b01..80b5806 100644
+--- a/package.json
++++ b/package.json
+@@ -27,7 +27,7 @@
+   "main": "chroma.js",
+   "scripts": {
+     "build": "grunt",
+-    "test": "./node_modules/vows/bin/vows --dot-matrix"
++    "test": "babel-node ./node_modules/vows/bin/vows --dot-matrix"
+   },
+   "devDependencies": {
+     "babel-cli": "6.24.1",
+diff --git a/src/api.js b/src/api.js
+index db50694..981938e 100644
+--- a/src/api.js
++++ b/src/api.js
+@@ -13,7 +13,7 @@ const chroma = function () {
+   return new Color(...arguments);
+ };
+
+-const _interpolators = [];
++var _interpolators = [];
+
+ // CommonJS module is defined
+ if ((typeof module !== 'undefined' && module !== null) && (module.exports != null)) { module.exports = chroma; }
+diff --git a/src/interpolator/interpolate.js b/src/interpolator/interpolate.js
+index 9b59bcd..61275e3 100644
+--- a/src/interpolator/interpolate.js
++++ b/src/interpolator/interpolate.js
+@@ -14,7 +14,7 @@
+     utils
+ */
+
+-const _interpolators = [];
++var _interpolators = [];
+
+ const interpolate = function (col1, col2, f, m) {
+   let res;
