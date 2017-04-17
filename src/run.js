@@ -15,7 +15,7 @@ export default function run(command) {
       if (code === 0) {
         resolve();
       } else {
-        reject();
+        reject(new Error(`Command failed: ${command}`));
       }
     });
   });
