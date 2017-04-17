@@ -4,6 +4,7 @@ export default {
   useDefaultConfig: true,
   extraDependencies: [
     'eslint-config-standard',
+    'eslint-plugin-node',
     'eslint-plugin-promise',
     'eslint-plugin-standard',
   ],
