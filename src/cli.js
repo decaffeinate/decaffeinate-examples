@@ -27,8 +27,8 @@ async function runCli(project, shouldPublish) {
       await testProject(project, shouldPublish);
     }
   } catch (e) {
-    console.error(`ERROR: ${e.message}`);
     process.exitCode = 1;
+    console.error(`ERROR: ${e.message}`);
   }
 }
 
