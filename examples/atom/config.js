@@ -19,5 +19,5 @@ export default {
     script/test
   `,
   expectConversionSuccess: true,
-  expectTestSuccess: false,
+  expectTestSuccess: true,
 };

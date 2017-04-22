@@ -108,9 +108,9 @@ async function testProject(project, shouldPublish) {
     await run('git add -A');
     await run('git commit -m "Save decaffeinate error details"');
 
-    await run('bulk-decaffeinate convert -p decaffeinate-successful-files.txt');
+    await run('bulk-decaffeinate convert --skip-verify -p decaffeinate-successful-files.txt');
   } else {
-    await run('bulk-decaffeinate convert');
+    await run('bulk-decaffeinate convert --skip-verify');
   }
 
   await run('bulk-decaffeinate clean');
@@ -165,6 +165,13 @@ function getDependencies(config) {
 }
 
 async function checkConversion(config) {
+  // To reduce build times, skip the check step if we expect success. If there
+  // is a problem later, it will end up as a crash and the build will fail.
+  if (config.expectConversionSuccess) {
+    return {
+      passed: true,
+    };
+  }
   await run('bulk-decaffeinate check');
   let hasErrorFile = await exists('./decaffeinate-errors.log');
   if (hasErrorFile) {
