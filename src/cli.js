@@ -56,7 +56,7 @@ async function testProject(project, shouldPublish) {
   await run(`mkdir ${repoDir}`);
 
   let cloneSuffix = config.branch ? `--branch ${config.branch}` : '';
-  await run(`git clone ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
+  await run(`git clone --depth=1 ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
 
   if (config.useDefaultConfig) {
     await run(`cp -R ./default-config/. ${repoDir}`);
