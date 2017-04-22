@@ -30,5 +30,5 @@ export default {
     npm run jasmine
   `,
   expectConversionSuccess: true,
-  expectTestSuccess: false,
+  expectTestSuccess: true,
 };
