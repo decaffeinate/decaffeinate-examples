@@ -60,12 +60,12 @@ async function testProject(project, shouldPublish) {
   // repo with the contents of other cloned repos.
   if (config.isMultiProject) {
     for (let {url, name} of config.cloneRepos) {
-      await run(`git clone --depth=1 ${url} ${repoDir}/${name}`);
+      await run(`git clone --depth=50 ${url} ${repoDir}/${name}`);
       await run(`rm -rf ${repoDir}/${name}/.git`);
     }
   } else {
     let cloneSuffix = config.branch ? `--branch ${config.branch}` : '';
-    await run(`git clone --depth=1 ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
+    await run(`git clone --depth=50 ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
   }
 
   if (config.useDefaultConfig) {
@@ -94,7 +94,7 @@ async function testProject(project, shouldPublish) {
 
   if (shouldPublish) {
     await run(`git remote add fork ${config.forkUrl}`);
-    await run('git fetch fork');
+    await run('git fetch --depth=50 fork');
     // If we're using a custom branch/ref, it may not be valid to push to it, so
     // skip this step. (Currently this fits all use cases, but it can be made
     // more flexible later if necessary.)
