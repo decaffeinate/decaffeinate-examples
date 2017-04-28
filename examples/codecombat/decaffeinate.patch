@@ -122,37 +122,6 @@ index 561b02868..326c23268 100644
  const jadeFiles = [];
 
  while (dirStack.length) {
-@@ -331,6 +336,8 @@ while (dirStack.length) {
-       dirStack.push(fullPath);
-     } else if (_.str.endsWith(file, '.coffee')) {
-       coffeeFiles.push(fullPath);
-+    } else if (_.str.endsWith(file, '.js')) {
-+      jsFiles.push(fullPath);
-     } else if (_.str.endsWith(file, '.jade')) {
-       jadeFiles.push(fullPath);
-     }
-@@ -343,6 +350,12 @@ for (file of Array.from(coffeeFiles)) {
-   exports.config.files.javascripts.joinTo[outputFile] = inputFile;
- }
-
-+for (file of Array.from(jsFiles)) {
-+  inputFile = file.replace('./app', 'app');
-+  outputFile = file.replace('./app', 'javascripts/app');
-+  exports.config.files.javascripts.joinTo[outputFile] = inputFile;
-+}
-+
- let numBundles = 0;
-
- for (file of Array.from(jadeFiles)) {
-@@ -361,7 +374,7 @@ for (file of Array.from(jadeFiles)) {
-   }
- }
-
--console.log(`Got ${coffeeFiles.length} coffee files and ${jadeFiles.length} jade files (bundled ${numBundles} of them together).`);
-+console.log(`Got ${coffeeFiles.length} coffee files and ${jsFiles.length} js files  and ${jadeFiles.length} jade files (bundled ${numBundles} of them together).`);
-
- if (process.env.GIT_SHA) {
-   const info =
 diff --git a/index.js b/index.js
 index 3abc77f62..71f6d4a95 100644
 --- a/index.js
