@@ -89,7 +89,7 @@ async function testProject(project, shouldPublish) {
   if (config.isMultiProject) {
     await run(`git init`);
     await run(`git add -A`);
-    await run(`git commit -m "Initial commit"`);
+    await run(`git commit --no-verify -m "Initial commit"`);
   }
 
   if (shouldPublish) {
@@ -113,7 +113,7 @@ async function testProject(project, shouldPublish) {
     await run(`npm install --save-dev --save-exact ${dependencies.join(' ')}`);
   }
   await run('git add -A');
-  await run('git commit -m "Add dependencies and config to prepare for decaffeinate"');
+  await run('git commit --no-verify -m "Add dependencies and config to prepare for decaffeinate"');
 
   if (config.beforeDecaffeinateScript) {
     await run(config.beforeDecaffeinateScript);
@@ -122,7 +122,7 @@ async function testProject(project, shouldPublish) {
   let conversionResult = await checkConversion(config);
   if (!conversionResult.passed) {
     await run('git add -A');
-    await run('git commit -m "Save decaffeinate error details"');
+    await run('git commit --no-verify -m "Save decaffeinate error details"');
 
     await run('bulk-decaffeinate convert --skip-verify -p decaffeinate-successful-files.txt');
   } else {
@@ -135,7 +135,7 @@ async function testProject(project, shouldPublish) {
   if (await exists(`${exampleDir}/decaffeinate.patch`)) {
     await run(`git apply ${exampleDir}/decaffeinate.patch`);
     await run('git add -A');
-    await run('git commit -m "Modify the build to work with JavaScript"');
+    await run('git commit --no-verify -m "Modify the build to work with JavaScript"');
   }
   let testResult = await runTests(config);
 
@@ -143,7 +143,7 @@ async function testProject(project, shouldPublish) {
   await downloadFile(getTestResultBadgeUrl(testResult), './test-status.svg');
   await writeFile('./README.md', getReadme(project, conversionResult, testResult));
   await run('git add -A');
-  await run('git commit -m "Update README and badges with decaffeinate results"');
+  await run('git commit --no-verify -m "Update README and badges with decaffeinate results"');
 
   if (shouldPublish) {
     await run('git push fork HEAD:decaffeinate -f');
@@ -152,7 +152,7 @@ async function testProject(project, shouldPublish) {
     await run('git rm --cached -r .');
     await run('git add conversion-status.svg');
     await run('git add test-status.svg');
-    await run('git commit -m "Add status SVGs to gh-pages branch"');
+    await run('git commit --no-verify -m "Add status SVGs to gh-pages branch"');
     await run('git push fork HEAD:gh-pages -f');
   }
 
