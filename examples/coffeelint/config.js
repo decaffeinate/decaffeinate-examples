@@ -4,6 +4,7 @@ export default {
   useDefaultConfig: true,
   extraDependencies: [
     'babelify',
+    'js-cake',
   ],
   expectConversionSuccess: true,
   expectTestSuccess: true,
