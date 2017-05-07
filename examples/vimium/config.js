@@ -2,6 +2,9 @@ export default {
   cloneUrl: 'https://github.com/philc/vimium.git',
   forkUrl: 'git@github.com:decaffeinate-examples/vimium.git',
   useDefaultConfig: true,
+  extraDependencies: [
+    'js-cake',
+  ],
   expectConversionSuccess: true,
   expectTestSuccess: false,
   beforeDecaffeinateScript: `
@@ -18,10 +21,9 @@ export default {
   testCommand: `
     set -e
     git submodule update --init
-    npm install -g coffee-script
     npm install path@0.11
     npm install util
-    cake build
-    cake test
+    ./node_modules/.bin/js-cake build
+    ./node_modules/.bin/js-cake test
   `,
 };

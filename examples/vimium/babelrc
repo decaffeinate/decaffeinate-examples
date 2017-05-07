@@ -1,0 +1,9 @@
+{
+  "presets": ["env"],
+  "parserOpts": {
+    "allowReturnOutsideFunction": true
+  },
+  "ignore": [
+    "shoulda.js"
+  ]
+}
