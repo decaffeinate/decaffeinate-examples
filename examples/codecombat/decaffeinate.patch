@@ -13,7 +13,7 @@ index 164185f69..4275f9e0b 100644
 +  ]
  }
 diff --git a/app/views/TestView.js b/app/views/TestView.js
-index 8c6f3bded..a758edb40 100644
+index fdf720fa4..8317569a6 100644
 --- a/app/views/TestView.js
 +++ b/app/views/TestView.js
 @@ -23,6 +23,7 @@ const template = require('templates/test-view');
@@ -38,7 +38,7 @@ index 6daa7a2d6..3f3fe14c3 100644
 
      return cb(null, [{ filename: outFile, content: c.html() }], deps);
 diff --git a/config.js b/config.js
-index 561b02868..326c23268 100644
+index 1af965587..f3e272183 100644
 --- a/config.js
 +++ b/config.js
 @@ -73,7 +73,7 @@ exports.config = {
@@ -135,7 +135,7 @@ index 3abc77f62..71f6d4a95 100644
  var server = require('./server');
  server.startServer();
 diff --git a/karma.conf.js b/karma.conf.js
-index c7ed0175d..f37e98f09 100644
+index c7ed0175d..e894e3b48 100644
 --- a/karma.conf.js
 +++ b/karma.conf.js
 @@ -15,6 +15,7 @@ module.exports = function(config) {
@@ -146,8 +146,17 @@ index c7ed0175d..f37e98f09 100644
        'public/javascripts/app/tests.js',
        'public/javascripts/run-tests.js'
      ],
+@@ -59,7 +60,7 @@ module.exports = function(config) {
+
+
+     // If browser does not capture in given timeout [ms], kill it
+-    captureTimeout : 5000,
++    captureTimeout : 30000,
+
+
+     // Continuous Integration mode
 diff --git a/package.json b/package.json
-index 8972e4601..6f2e726ba 100644
+index 1cc10e308..dc48ad89c 100644
 --- a/package.json
 +++ b/package.json
 @@ -33,10 +33,10 @@
