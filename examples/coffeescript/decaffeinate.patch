@@ -1,46 +1,51 @@
-diff --git c/Cakefile w/Cakefile
-index c9a675f..728c896 100644
---- c/Cakefile
-+++ w/Cakefile
-@@ -217,6 +217,7 @@ task 'bench', 'quick benchmark of compilation time', ->
- # Run the CoffeeScript test suite.
- runTests = (CoffeeScript) ->
-   CoffeeScript.register()
-+  require 'babel-register'
-   startTime   = Date.now()
-   currentFile = null
-   passedTests = 0
-@@ -282,19 +283,20 @@ runTests = (CoffeeScript) ->
-     '--harmony-generators' in process.execArgv
-   files.splice files.indexOf('generators.coffee'), 1 if not generatorsAreAvailable
+diff --git a/Cakefile.js b/Cakefile.js
+index d4e733b..d2b0cc8 100644
+--- a/Cakefile.js
++++ b/Cakefile.js
+@@ -279,6 +279,7 @@ task('bench', 'quick benchmark of compilation time', () => {
+ // Run the CoffeeScript test suite.
+ var runTests = function (CoffeeScript) {
+   CoffeeScript.register();
++  require('babel-register');
+   const startTime = Date.now();
+   let currentFile = null;
+   let passedTests = 0;
+@@ -354,14 +355,14 @@ var runTests = function (CoffeeScript) {
+   if (!generatorsAreAvailable) { files.splice(files.indexOf('generators.coffee'), 1); }
 
--  for file in files when helpers.isCoffee file
--    literate = helpers.isLiterate file
-+  for file in files when file.endsWith('.js')
-     currentFile = filename = path.join 'test', file
--    code = fs.readFileSync filename
-     try
--      CoffeeScript.run code.toString(), {filename, literate}
-+      require './' + filename
-     catch error
-       failures.push {filename, error}
-   return !failures.length
+   for (const file of Array.from(files)) {
+-    if (helpers.isCoffee(file)) {
++    if (file.endsWith('.js')) {
+       var filename;
 
-
- task 'test', 'run the CoffeeScript language test suite', ->
--  runTests CoffeeScript
-+  success = runTests CoffeeScript
-+  if !success
-+    process.exitCode = 1
-+  return
+       const literate = helpers.isLiterate(file);
+       currentFile = (filename = path.join('test', file));
+       const code = fs.readFileSync(filename);
+       try {
+-        CoffeeScript.run(code.toString(), { filename, literate });
++        require(`./${filename}`);
+       } catch (error1) {
+         const error = error1;
+         failures.push({ filename, error });
+@@ -372,7 +373,12 @@ var runTests = function (CoffeeScript) {
+ };
 
 
- task 'test:browser', 'run the test suite against the merged browser script', ->
-diff --git c/check-coffeescript-examples.sh w/check-coffeescript-examples.sh
+-task('test', 'run the CoffeeScript language test suite', () => runTests(CoffeeScript));
++task('test', 'run the CoffeeScript language test suite', () => {
++  const success = runTests(CoffeeScript);
++  if (!success) {
++    process.exitCode = 1;
++  }
++});
+
+
+ task('test:browser', 'run the test suite against the merged browser script', () => {
+diff --git a/check-coffeescript-examples.sh b/check-coffeescript-examples.sh
 new file mode 100755
 index 0000000..7638b14
 --- /dev/null
-+++ w/check-coffeescript-examples.sh
++++ b/check-coffeescript-examples.sh
 @@ -0,0 +1,20 @@
 +#!/bin/bash
 +
@@ -62,10 +67,10 @@ index 0000000..7638b14
 +  cmp expected.js actual.js
 +  echo 'Passed!'
 +done
-diff --git c/test/cluster.js w/test/cluster.js
+diff --git a/test/cluster.js b/test/cluster.js
 index 706ca0d..07f9fd6 100644
---- c/test/cluster.js
-+++ w/test/cluster.js
+--- a/test/cluster.js
++++ b/test/cluster.js
 @@ -8,6 +8,10 @@
 
  if (typeof testingBrowser !== 'undefined' && testingBrowser !== null) { return; }
