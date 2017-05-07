@@ -5,13 +5,14 @@ export default {
   useDefaultConfig: true,
   extraDependencies: [
     'babel-plugin-transform-remove-strict-mode',
+    'js-cake',
   ],
   testCommand: `
     set -e
     ./node_modules/.bin/babel src -d lib/coffee-script
     git commit -a -m 'Rebuild CoffeeScript with new code'
     ./check-coffeescript-examples.sh
-    bin/cake test
+    ./node_modules/.bin/js-cake test
   `,
   expectConversionSuccess: true,
   expectTestSuccess: false,
