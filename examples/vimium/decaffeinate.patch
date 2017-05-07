@@ -1,25 +1,27 @@
-diff --git a/Cakefile b/Cakefile
-index 4d2d023..08e294f 100644
---- a/Cakefile
-+++ b/Cakefile
-@@ -40,8 +40,15 @@ visitDirectory = (directory, visitor) ->
-     visitor(filepath)
+diff --git a/Cakefile.js b/Cakefile.js
+index 9c7cfa1..b7f6b66 100644
+--- a/Cakefile.js
++++ b/Cakefile.js
+@@ -75,8 +75,17 @@ var visitDirectory = (directory, visitor) =>
+ ;
 
- task "build", "compile all coffeescript files to javascript", ->
--  coffee = spawn "coffee", ["-c", __dirname]
--  coffee.on 'exit', (returnCode) -> process.exit returnCode
-+  stdout = child_process.execSync("./node_modules/.bin/babel src -d .")
-+  for line in stdout.toString().split('\n')
-+    line = line.trim()
-+    if line
-+      outPath = line.split(' ')[2]
-+      console.log('Fixing file ' + outPath)
-+      contents = fs.readFileSync(outPath)
-+      contents = ";(function() {\n#{contents};\n})();"
-+      fs.writeFileSync(outPath, contents)
+ task('build', 'compile all coffeescript files to javascript', () => {
+-  const coffee = spawn('coffee', ['-c', __dirname]);
+-  return coffee.on('exit', returnCode => process.exit(returnCode));
++  const stdout = child_process.execSync('./node_modules/.bin/babel src -d .');
++  for (let line of stdout.toString().split('\n')) {
++    line = line.trim();
++    if (line) {
++      const outPath = line.split(' ')[2];
++      console.log(`Fixing file ${outPath}`);
++      let contents = fs.readFileSync(outPath);
++      contents = `;(function() {\n${contents};\n})();`;
++      fs.writeFileSync(outPath, contents);
++    }
++  }
+ });
 
- task "clean", "removes any js files which were compiled from coffeescript", ->
-   visitDirectory __dirname, (filepath) ->
+ task('clean', 'removes any js files which were compiled from coffeescript', () =>
 diff --git a/pages/hud.html b/pages/hud.html
 index 9532afc..4acf507 100644
 --- a/pages/hud.html
