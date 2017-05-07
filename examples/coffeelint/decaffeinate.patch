@@ -1,54 +1,55 @@
-diff --git a/Cakefile b/Cakefile
-index 040b67f..43f8bb8 100644
---- a/Cakefile
-+++ b/Cakefile
-@@ -1,4 +1,5 @@
- fs = require 'fs'
-+child_process = require 'child_process'
- glob = require 'glob'
- path = require 'path'
- browserify = require 'browserify'
-@@ -9,8 +10,7 @@ copySync = (src, dest) ->
-     fs.writeFileSync dest, fs.readFileSync(src)
+diff --git a/Cakefile.js b/Cakefile.js
+index bc3c5d8..8aca3cb 100644
+--- a/Cakefile.js
++++ b/Cakefile.js
+@@ -15,13 +15,12 @@ const glob = require('glob');
+ const path = require('path');
+ const browserify = require('browserify');
+ const CoffeeScript = require('coffee-script');
+-const { exec } = require('child_process');
++const { exec, execSync } = require('child_process');
 
- coffeeSync = (input, output) ->
--    coffee = fs.readFileSync(input).toString()
--    fs.writeFileSync output, CoffeeScript.compile(coffee)
-+    child_process.execSync("./node_modules/.bin/babel #{input} --out-file #{output}")
+ const copySync = (src, dest) => fs.writeFileSync(dest, fs.readFileSync(src));
 
- task 'compile', 'Compile Coffeelint', ->
-     console.log 'Compiling Coffeelint...'
-@@ -19,22 +19,23 @@ task 'compile', 'Compile Coffeelint', ->
-     invoke 'compile:commandline'
+ const coffeeSync = function (input, output) {
+-    const coffee = fs.readFileSync(input).toString();
+-    return fs.writeFileSync(output, CoffeeScript.compile(coffee));
++    execSync(`./node_modules/.bin/babel ${input} --out-file ${output}`);
+ };
 
- task 'compile:commandline', 'Compiles commandline.js', ->
--    coffeeSync 'src/commandline.coffee', 'lib/commandline.js'
--    coffeeSync 'src/configfinder.coffee', 'lib/configfinder.js'
--    coffeeSync 'src/cache.coffee', 'lib/cache.js'
--    coffeeSync 'src/ruleLoader.coffee', 'lib/ruleLoader.js'
-+    coffeeSync 'src/commandline.js', 'lib/commandline.js'
-+    coffeeSync 'src/configfinder.js', 'lib/configfinder.js'
-+    coffeeSync 'src/cache.js', 'lib/cache.js'
-+    coffeeSync 'src/ruleLoader.js', 'lib/ruleLoader.js'
-     fs.mkdirSync 'lib/reporters' unless fs.existsSync 'lib/reporters'
--    for src in glob.sync('reporters/*.coffee', { cwd: 'src' })
-+    for src in glob.sync('reporters/*.js', { cwd: 'src' })
-         # Slice the "coffee" extension of the end and replace with js
--        dest = src[...-6] + 'js'
-+        dest = src
-         coffeeSync "src/#{src}", "lib/#{dest}"
+ task('compile', 'Compile Coffeelint', () => {
+@@ -33,14 +32,14 @@ task('compile', 'Compile Coffeelint', () => {
 
- task 'compile:browserify', 'Uses browserify to compile coffeelint', ->
-     opts =
-         standalone: 'coffeelint'
-     b = browserify(opts)
--    b.add [ './src/coffeelint.coffee' ]
-+    b.add [ './src/coffeelint.js' ]
-     b.transform require('coffeeify')
-+    b.transform require('babelify')
-     b.bundle().pipe fs.createWriteStream('lib/coffeelint.js')
+ task('compile:commandline', 'Compiles commandline.js', () => {
+     let dest;
+-    coffeeSync('src/commandline.coffee', 'lib/commandline.js');
+-    coffeeSync('src/configfinder.coffee', 'lib/configfinder.js');
+-    coffeeSync('src/cache.coffee', 'lib/cache.js');
+-    coffeeSync('src/ruleLoader.coffee', 'lib/ruleLoader.js');
++    coffeeSync('src/commandline.js', 'lib/commandline.js');
++    coffeeSync('src/configfinder.js', 'lib/configfinder.js');
++    coffeeSync('src/cache.js', 'lib/cache.js');
++    coffeeSync('src/ruleLoader.js', 'lib/ruleLoader.js');
+     if (!fs.existsSync('lib/reporters')) { fs.mkdirSync('lib/reporters'); }
+-    return Array.from(glob.sync('reporters/*.coffee', { cwd: 'src' })).map(src =>
++    return Array.from(glob.sync('reporters/*.js', { cwd: 'src' })).map(src =>
+         // Slice the "coffee" extension of the end and replace with js
+-        ((dest = `${src.slice(0, -6)}js`),
++        ((dest = src),
+         coffeeSync(`src/${src}`, `lib/${dest}`)));
+ });
 
- task 'prepublish', 'Prepublish', ->
+@@ -48,8 +47,9 @@ task('compile:browserify', 'Uses browserify to compile coffeelint', () => {
+     const opts =
+         { standalone: 'coffeelint' };
+     const b = browserify(opts);
+-    b.add(['./src/coffeelint.coffee']);
++    b.add(['./src/coffeelint.js']);
+     b.transform(require('coffeeify'));
++    b.transform(require('babelify'));
+     return b.bundle().pipe(fs.createWriteStream('lib/coffeelint.js'));
+ });
+
 diff --git a/bin/coffeelint b/bin/coffeelint
 index 3148fdc..56c21cd 100755
 --- a/bin/coffeelint
@@ -62,18 +63,37 @@ index 3148fdc..56c21cd 100755
      require('../src/commandline');
  } else {
 diff --git a/package.json b/package.json
-index 287f170..bbc9419 100644
+index 62cfceb..c6a632c 100644
 --- a/package.json
 +++ b/package.json
-@@ -45,7 +45,7 @@
+@@ -45,17 +45,17 @@
+   },
    "license": "MIT",
    "scripts": {
-     "pretest": "cake compile",
+-    "pretest": "cake compile",
 -    "test": "./vowsrunner.js --spec test/*.coffee test/*.litcoffee",
++    "pretest": "js-cake compile",
 +    "test": "./vowsrunner.js --spec test/*.js test/*.litcoffee",
      "testrule": "npm run compile && ./vowsrunner.js --spec",
      "posttest": "npm run lint",
-     "prepublish": "cake prepublish",
+-    "prepublish": "cake prepublish",
+-    "postpublish": "cake postpublish",
+-    "publish": "cake publish",
+-    "install": "cake install",
+-    "lint": "cake compile && ./bin/coffeelint .",
+-    "lint-csv": "cake compile && ./bin/coffeelint --csv .",
+-    "lint-jslint": "cake compile && ./bin/coffeelint --jslint .",
+-    "compile": "cake compile"
++    "prepublish": "js-cake prepublish",
++    "postpublish": "js-cake postpublish",
++    "publish": "js-cake publish",
++    "install": "js-cake install",
++    "lint": "js-cake compile && ./bin/coffeelint .",
++    "lint-csv": "js-cake compile && ./bin/coffeelint --csv .",
++    "lint-jslint": "js-cake compile && ./bin/coffeelint --jslint .",
++    "compile": "js-cake compile"
+   }
+ }
 diff --git a/vowsrunner.js b/vowsrunner.js
 index 2433979..b589667 100755
 --- a/vowsrunner.js
