@@ -214,8 +214,10 @@ async function runTests(config) {
     return 'SKIPPED';
   }
   try {
-    if (config.testCommand) {
-      await run(config.testCommand);
+    if (config.testCommands) {
+      for (let command of config.testCommands) {
+        await run(command);
+      }
     } else {
       await run('npm test');
     }
