@@ -6,7 +6,7 @@ export default {
     'babel-plugin-transform-remove-strict-mode',
     'babel-brunch@6.0.0',
   ],
-  testCommand: `
+  testCommands: [`
     set -e
     export COCO_TRAVIS_TEST=1
     export DISPLAY=:99.0
@@ -28,7 +28,7 @@ export default {
     
     ./node_modules/karma/bin/karma start --browsers Firefox --single-run --reporters dots
     npm run jasmine
-  `,
+  `],
   expectConversionSuccess: true,
   expectTestSuccess: true,
 };

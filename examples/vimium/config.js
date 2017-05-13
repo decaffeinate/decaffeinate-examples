@@ -18,12 +18,12 @@ export default {
     done
     git commit -m 'Move source files to src directory'
   `,
-  testCommand: `
+  testCommands: [`
     set -e
     git submodule update --init
     npm install path@0.11
     npm install util
     ./node_modules/.bin/js-cake build
     ./node_modules/.bin/js-cake test
-  `,
+  `],
 };
