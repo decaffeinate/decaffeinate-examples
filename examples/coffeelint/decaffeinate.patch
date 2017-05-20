@@ -1,5 +1,5 @@
 diff --git a/Cakefile.js b/Cakefile.js
-index bc3c5d8..8aca3cb 100644
+index 9552aa4..e3b9025 100644
 --- a/Cakefile.js
 +++ b/Cakefile.js
 @@ -15,13 +15,12 @@ const glob = require('glob');
@@ -18,10 +18,10 @@ index bc3c5d8..8aca3cb 100644
  };
 
  task('compile', 'Compile Coffeelint', () => {
-@@ -33,14 +32,14 @@ task('compile', 'Compile Coffeelint', () => {
+@@ -32,16 +31,16 @@ task('compile', 'Compile Coffeelint', () => {
+ });
 
  task('compile:commandline', 'Compiles commandline.js', () => {
-     let dest;
 -    coffeeSync('src/commandline.coffee', 'lib/commandline.js');
 -    coffeeSync('src/configfinder.coffee', 'lib/configfinder.js');
 -    coffeeSync('src/cache.coffee', 'lib/cache.js');
@@ -31,15 +31,17 @@ index bc3c5d8..8aca3cb 100644
 +    coffeeSync('src/cache.js', 'lib/cache.js');
 +    coffeeSync('src/ruleLoader.js', 'lib/ruleLoader.js');
      if (!fs.existsSync('lib/reporters')) { fs.mkdirSync('lib/reporters'); }
--    return Array.from(glob.sync('reporters/*.coffee', { cwd: 'src' })).map(src =>
-+    return Array.from(glob.sync('reporters/*.js', { cwd: 'src' })).map(src =>
+     return (() => {
+         const result = [];
+-        for (const src of Array.from(glob.sync('reporters/*.coffee', { cwd: 'src' }))) {
++        for (const src of Array.from(glob.sync('reporters/*.js', { cwd: 'src' }))) {
          // Slice the "coffee" extension of the end and replace with js
--        ((dest = `${src.slice(0, -6)}js`),
-+        ((dest = src),
-         coffeeSync(`src/${src}`, `lib/${dest}`)));
- });
-
-@@ -48,8 +47,9 @@ task('compile:browserify', 'Uses browserify to compile coffeelint', () => {
+-            const dest = `${src.slice(0, -6)}js`;
++            const dest = src;
+             result.push(coffeeSync(`src/${src}`, `lib/${dest}`));
+         }
+         return result;
+@@ -52,8 +51,9 @@ task('compile:browserify', 'Uses browserify to compile coffeelint', () => {
      const opts =
          { standalone: 'coffeelint' };
      const b = browserify(opts);
@@ -63,10 +65,10 @@ index 3148fdc..56c21cd 100755
      require('../src/commandline');
  } else {
 diff --git a/package.json b/package.json
-index 62cfceb..c6a632c 100644
+index 53485b7..0cb349c 100644
 --- a/package.json
 +++ b/package.json
-@@ -45,17 +45,17 @@
+@@ -46,17 +46,17 @@
    },
    "license": "MIT",
    "scripts": {
