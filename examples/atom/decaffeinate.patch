@@ -1,8 +1,8 @@
 diff --git a/spec/compile-cache-spec.js b/spec/compile-cache-spec.js
-index 127ef6a26..16b191207 100644
+index 76699d9..151bf14 100644
 --- a/spec/compile-cache-spec.js
 +++ b/spec/compile-cache-spec.js
-@@ -107,7 +107,7 @@ describe('CompileCache', function () {
+@@ -108,7 +108,7 @@ describe('CompileCache', function () {
        waits(1)
        return runs(function () {
          error = new Error('Oops again')
@@ -11,7 +11,7 @@ index 127ef6a26..16b191207 100644
          return expect(Array.isArray(error.getRawStack())).toBe(true)
        })
      })
-@@ -119,7 +119,7 @@ describe('CompileCache', function () {
+@@ -120,7 +120,7 @@ describe('CompileCache', function () {
        Error.prepareStackTrace = originalPrepareStackTrace
 
        const error = new Error('Oops')
@@ -20,7 +20,7 @@ index 127ef6a26..16b191207 100644
        return expect(Array.isArray(error.getRawStack())).toBe(true)
      })
 
-@@ -132,7 +132,7 @@ describe('CompileCache', function () {
+@@ -133,7 +133,7 @@ describe('CompileCache', function () {
        }
 
        const error = new Error('Oops')
@@ -30,7 +30,7 @@ index 127ef6a26..16b191207 100644
        return expect(Array.isArray(error.getRawStack())).toBe(true)
      })
 diff --git a/spec/config-spec.js b/spec/config-spec.js
-index 6c3592573..01d46c057 100644
+index fbfc5f1..a1887c5 100644
 --- a/spec/config-spec.js
 +++ b/spec/config-spec.js
 @@ -1310,7 +1310,7 @@ foo:
@@ -43,10 +43,10 @@ index 6c3592573..01d46c057 100644
            })
          })
 diff --git a/spec/integration/helpers/start-atom.js b/spec/integration/helpers/start-atom.js
-index 5b17dc9eb..2ace0d052 100644
+index 1df7ceb..e86b967 100644
 --- a/spec/integration/helpers/start-atom.js
 +++ b/spec/integration/helpers/start-atom.js
-@@ -105,7 +105,12 @@ const buildAtomClient = function (args, env) {
+@@ -104,7 +104,12 @@ const buildAtomClient = function (args, env) {
          .windowHandles(cb)
      }).addCommand('waitForPaneItemCount', function (count, timeout, cb) {
        return this.waitUntil(function () {
@@ -61,15 +61,15 @@ index 5b17dc9eb..2ace0d052 100644
        }
        , timeout)
 diff --git a/static/index.html b/static/index.html
-index 39c7d80c1..8d2c85de4 100644
+index 386481b..ab239dd 100644
 --- a/static/index.html
 +++ b/static/index.html
 @@ -1,7 +1,7 @@
  <!DOCTYPE html>
  <html>
  <head>
--  <meta http-equiv="Content-Security-Policy" content="default-src *; img-src blob: data: *; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src blob: data: mediastream: *;">
-+  <meta http-equiv="Content-Security-Policy" content="default-src *; img-src blob: data: *; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src blob: data: mediastream: *;">
+-  <meta http-equiv="Content-Security-Policy" content="default-src * atom://*; img-src blob: data: * atom://*; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src blob: data: mediastream: * atom://*;">
++  <meta http-equiv="Content-Security-Policy" content="default-src * atom://*; img-src blob: data: * atom://*; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src blob: data: mediastream: * atom://*;">
    <script src="index.js"></script>
  </head>
  <body tabindex="-1">
