@@ -99,7 +99,12 @@ async function testProject(project, shouldPublish) {
     // skip this step. (Currently this fits all use cases, but it can be made
     // more flexible later if necessary.)
     if (!config.branch && !config.isMultiProject) {
-      await run('git push fork');
+      try {
+        await run('git push fork');
+      } catch (e) {
+        await run('git fetch --unshallow');
+        await run('git push fork');
+      }
     }
   }
 
