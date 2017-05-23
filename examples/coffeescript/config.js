@@ -6,6 +6,7 @@ export default {
   extraDependencies: [
     'babel-plugin-transform-remove-strict-mode',
     'js-cake',
+    'require-uncached',
   ],
   testCommands: [`
     set -e

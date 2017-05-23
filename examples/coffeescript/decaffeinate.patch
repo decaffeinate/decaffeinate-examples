@@ -1,5 +1,5 @@
 diff --git a/Cakefile.js b/Cakefile.js
-index d4e733b..d2b0cc8 100644
+index d4e733b7..d2b0cc88 100644
 --- a/Cakefile.js
 +++ b/Cakefile.js
 @@ -279,6 +279,7 @@ task('bench', 'quick benchmark of compilation time', () => {
@@ -43,7 +43,7 @@ index d4e733b..d2b0cc8 100644
  task('test:browser', 'run the test suite against the merged browser script', () => {
 diff --git a/check-coffeescript-examples.sh b/check-coffeescript-examples.sh
 new file mode 100755
-index 0000000..7638b14
+index 00000000..7638b145
 --- /dev/null
 +++ b/check-coffeescript-examples.sh
 @@ -0,0 +1,20 @@
@@ -68,7 +68,7 @@ index 0000000..7638b14
 +  echo 'Passed!'
 +done
 diff --git a/test/cluster.js b/test/cluster.js
-index 706ca0d..07f9fd6 100644
+index 706ca0d5..07f9fd64 100644
 --- a/test/cluster.js
 +++ b/test/cluster.js
 @@ -8,6 +8,10 @@
@@ -82,3 +82,30 @@ index 706ca0d..07f9fd6 100644
  const cluster = require('cluster');
 
  if (cluster.isMaster) {
+diff --git a/test/error_messages.js b/test/error_messages.js
+index 82058386..6606017e 100644
+--- a/test/error_messages.js
++++ b/test/error_messages.js
+@@ -78,7 +78,7 @@ if (typeof require !== 'undefined' && require !== null) {
+
+   test('patchStackTrace line patching', () => {
+     const err = new Error('error');
+-    return ok(err.stack.match(/test[\/\\]error_messages\.coffee:\d+:\d+\b/));
++    return ok(err.stack.match(/test[\/\\]error_messages\.js:\d+:\d+\b/));
+   });
+
+   test('patchStackTrace stack prelude consistent with V8', () => {
+diff --git a/test/importing.js b/test/importing.js
+index 6540e78c..00641e2b 100644
+--- a/test/importing.js
++++ b/test/importing.js
+@@ -25,7 +25,8 @@ if ((typeof window === 'undefined' || window === null) && (typeof testingBrowser
+     } else {
+       global[magicKey] = {};
+       if ((typeof require !== 'undefined' && require !== null ? require.extensions : undefined) != null) {
+-        ok(require(__filename).method() === magicValue);
++        const requireUncached = require('require-uncached');
++        ok(requireUncached(__filename).method() === magicValue);
+       }
+       return delete global[magicKey];
+     }
