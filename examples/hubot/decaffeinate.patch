@@ -1,10 +1,13 @@
-diff --git a/script/test b/script/test
-index 705a6f5..5385326 100755
---- a/script/test
-+++ b/script/test
-@@ -1,4 +1,4 @@
- #!/bin/bash
-
- source script/bootstrap
--mocha --require coffee-errors --compilers coffee:coffee-script "$@"
-+mocha --require coffee-errors --require babel-register --require babel-polyfill --compilers coffee:coffee-script "$@"
+diff --git a/package.json b/package.json
+index b61c389..ba3eb31 100644
+--- a/package.json
++++ b/package.json
+@@ -55,7 +55,7 @@
+     "prestart": "script/dotenv",
+     "start": "bin/hubot",
+     "pretest": "script/dotenv",
+-    "test": "mocha --require coffee-errors --compilers coffee:coffee-script",
++    "test": "mocha --require coffee-errors --require babel-register --require babel-polyfill --compilers coffee:coffee-script",
+     "test:smoke": "coffee src/**/*.coffee",
+     "compile": "coffee --compile --bare --output lib src",
+     "compile:watch": "coffee --compile --bare --output lib --watch src"
