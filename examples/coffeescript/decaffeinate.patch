@@ -1,16 +1,17 @@
 diff --git a/Cakefile.js b/Cakefile.js
-index d4e733b7..d2b0cc88 100644
+index d4e733b7..56841968 100644
 --- a/Cakefile.js
 +++ b/Cakefile.js
-@@ -279,6 +279,7 @@ task('bench', 'quick benchmark of compilation time', () => {
+@@ -279,6 +279,8 @@ task('bench', 'quick benchmark of compilation time', () => {
  // Run the CoffeeScript test suite.
  var runTests = function (CoffeeScript) {
    CoffeeScript.register();
 +  require('babel-register');
++  require('babel-polyfill');
    const startTime = Date.now();
    let currentFile = null;
    let passedTests = 0;
-@@ -354,14 +355,14 @@ var runTests = function (CoffeeScript) {
+@@ -354,14 +356,14 @@ var runTests = function (CoffeeScript) {
    if (!generatorsAreAvailable) { files.splice(files.indexOf('generators.coffee'), 1); }
 
    for (const file of Array.from(files)) {
@@ -27,7 +28,7 @@ index d4e733b7..d2b0cc88 100644
        } catch (error1) {
          const error = error1;
          failures.push({ filename, error });
-@@ -372,7 +373,12 @@ var runTests = function (CoffeeScript) {
+@@ -372,7 +374,12 @@ var runTests = function (CoffeeScript) {
  };
 
 
@@ -68,10 +69,10 @@ index 00000000..7638b145
 +  echo 'Passed!'
 +done
 diff --git a/test/cluster.js b/test/cluster.js
-index 706ca0d5..07f9fd64 100644
+index acce6046..9885c14b 100644
 --- a/test/cluster.js
 +++ b/test/cluster.js
-@@ -8,6 +8,10 @@
+@@ -5,6 +5,10 @@
 
  if (typeof testingBrowser !== 'undefined' && testingBrowser !== null) { return; }
 
