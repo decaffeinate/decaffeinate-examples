@@ -1,5 +1,5 @@
 diff --git a/Cakefile.js b/Cakefile.js
-index d4e733b7..56841968 100644
+index d4e733b7..270db11f 100644
 --- a/Cakefile.js
 +++ b/Cakefile.js
 @@ -279,6 +279,8 @@ task('bench', 'quick benchmark of compilation time', () => {
@@ -11,7 +11,16 @@ index d4e733b7..56841968 100644
    const startTime = Date.now();
    let currentFile = null;
    let passedTests = 0;
-@@ -354,14 +356,14 @@ var runTests = function (CoffeeScript) {
+@@ -307,6 +309,8 @@ var runTests = function (CoffeeScript) {
+     }
+   };
+
++  global.skippedTest = function (description, fn) {};
++
+   // See http://wiki.ecmascript.org/doku.php?id=harmony:egal
+   const egal = function (a, b) {
+     if (a === b) {
+@@ -354,14 +358,14 @@ var runTests = function (CoffeeScript) {
    if (!generatorsAreAvailable) { files.splice(files.indexOf('generators.coffee'), 1); }
 
    for (const file of Array.from(files)) {
@@ -28,7 +37,7 @@ index d4e733b7..56841968 100644
        } catch (error1) {
          const error = error1;
          failures.push({ filename, error });
-@@ -372,7 +374,12 @@ var runTests = function (CoffeeScript) {
+@@ -372,7 +376,12 @@ var runTests = function (CoffeeScript) {
  };
 
 
@@ -68,6 +77,30 @@ index 00000000..7638b145
 +  cmp expected.js actual.js
 +  echo 'Passed!'
 +done
+diff --git a/test/classes.js b/test/classes.js
+index bc166165..ad42d75a 100644
+--- a/test/classes.js
++++ b/test/classes.js
+@@ -594,7 +594,8 @@ test('variables in constructor bodies are correctly scoped', () => {
+
+   const a = new A();
+   eq(a.captured().x, 10);
+-  return eq(a.captured().y, 2);
++  // https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#executable-class-bodies-can-have-their-statements-reordered
++  return eq(a.captured().y, 20);
+ });
+
+
+@@ -655,7 +656,8 @@ test('ensure that constructors invoked with splats return a new object', () => {
+   // Ensure that constructors invoked with splats cache the function.
+   let called = 0;
+   const get = function () { if (called++) { return false; } return (Type = class Type {}); };
+-  return new get()(...Array.from(args || []));
++  // https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#classes-cannot-be-called-without-new
++  return new (get())(...Array.from(args || []));
+ });
+
+ test("`new` shouldn't add extra parens", () => ok(new Date().constructor === Date));
 diff --git a/test/cluster.js b/test/cluster.js
 index acce6046..9885c14b 100644
 --- a/test/cluster.js
@@ -110,3 +143,46 @@ index 6540e78c..00641e2b 100644
        }
        return delete global[magicKey];
      }
+diff --git a/test/operators.js b/test/operators.js
+index 613a3b7d..55e45a69 100644
+--- a/test/operators.js
++++ b/test/operators.js
+@@ -252,7 +252,8 @@ test('#1100: precedence in or-test compilation of `in`', () => {
+   return ok(!([1, 0 || 1].includes(0)));
+ });
+
+-test('#1630: `in` should check `hasOwnProperty`', () => ok(!Array.from({ length: 1 }).includes(undefined)));
++// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#undefined-in-arr-returns-true-for-sparse-arrays-without-explicit-undefineds
++skippedTest('#1630: `in` should check `hasOwnProperty`', () => ok(!Array.from({ length: 1 }).includes(undefined)));
+
+ test('#1714: lexer bug with raw range `for` followed by `in`', () => {
+   for (let i = 1; i <= 2; i++) { 0; }
+diff --git a/test/scope.js b/test/scope.js
+index e3baf5a2..b32c49d8 100644
+--- a/test/scope.js
++++ b/test/scope.js
+@@ -93,19 +93,19 @@ test('loop variable should be accessible after for-in loop', () => {
+   })());
+   return eq(x, 2);
+ });
+-
+-class Array {
++// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#globals-like-object-and-array-may-be-accessed-by-name-from-generated-code
++class Array_ {
+   static initClass() {
+     this.prototype.slice = fail;
+   }
+ }
+-Array.initClass(); // needs to be global
+-class Object {
++Array_.initClass(); // needs to be global
++class Object_ {
+   static initClass() {
+     this.prototype.hasOwnProperty = fail;
+   }
+ }
+-Object.initClass();
++Object_.initClass();
+ test("#1973: redefining Array/Object constructors shouldn't confuse __X helpers", () => {
+   const arr = [1, 2, 3, 4];
+   arrayEq([3, 4], arr.slice(2));
