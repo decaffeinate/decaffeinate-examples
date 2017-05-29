@@ -331,6 +331,8 @@ For more details on the errors, view the [error logs](./decaffeinate-errors.log)
 function getTestResultDescription(testResult) {
   if (testResult === 'PASSED') {
     return 'All tests passed.';
+  } else if (testResult === 'PATCH_FAILED') {
+    return 'The patch to set up tests did not apply cleanly.';
   } else if (testResult === 'FAILED') {
     return 'Some tests failed.';
   } else {
