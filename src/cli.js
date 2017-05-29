@@ -148,14 +148,22 @@ async function testProject(project, shouldPublish, forceCheck) {
   }
 
   await run('bulk-decaffeinate clean');
+  let testResult;
   // Make the patch its own commit after everything else so it's easier to
   // iterate on.
-  if (await exists(`${exampleDir}/decaffeinate.patch`)) {
-    await run(`git apply ${exampleDir}/decaffeinate.patch`);
-    await run('git add -A');
-    await run('git commit --no-verify -m "Modify the build to work with JavaScript"');
+  try {
+    if (await exists(`${exampleDir}/decaffeinate.patch`)) {
+      await run(`git apply ${exampleDir}/decaffeinate.patch`);
+      await run('git add -A');
+      await run('git commit --no-verify -m "Modify the build to work with JavaScript"');
+    }
+  } catch (e) {
+    testResult = 'PATCH_FAILED';
+    process.exitCode = 1;
   }
-  let testResult = await runTests(config);
+  if (!testResult) {
+    testResult = await runTests(config);
+  }
 
   await downloadFile(getConversionResultBadgeUrl(conversionResult), './conversion-status.svg');
   await downloadFile(getTestResultBadgeUrl(testResult), './test-status.svg');
@@ -294,6 +302,8 @@ function getConversionResultBadgeUrl(conversionResult) {
 function getTestResultBadgeUrl(testResult) {
   if (testResult === 'PASSED') {
     return getBadgeUrl('tests', 'passed', 'brightgreen');
+  } else if (testResult === 'PATCH_FAILED') {
+    return getBadgeUrl('tests', 'patch failed', 'red');
   } else if (testResult === 'FAILED') {
     return getBadgeUrl('tests', 'failed', 'red');
   } else {
