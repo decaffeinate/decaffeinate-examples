@@ -16,33 +16,38 @@ export default function cli() {
            current git user must have permissions to do so.`)
     .parse(process.argv);
 
-  runCli(project, commander.publish);
+  runCli(project, commander.publish, false);
 }
 
-async function runCli(project, shouldPublish) {
+async function runCli(project, shouldPublish, forceCheck) {
   try {
     if (project === 'all') {
-      await testAllProjects(shouldPublish);
+      await testAllProjects(shouldPublish, forceCheck);
     } else {
-      await testProject(project, shouldPublish);
+      await testProject(project, shouldPublish, forceCheck);
     }
   } catch (e) {
+    if (e.retryWithForceCheck) {
+      console.log('Failed initial attempt, retrying with forceCheck=true.');
+      await runCli(project, shouldPublish, true);
+      return;
+    }
     process.exitCode = 1;
     console.error(`ERROR: ${e.message}`);
   }
 }
 
-async function testAllProjects(shouldPublish) {
+async function testAllProjects(shouldPublish, forceCheck) {
   let projectNames = await readdir('./examples');
   console.log(`Processing all projects: ${projectNames.join(', ')}`);
   for (let project of projectNames) {
     console.log(`Processing project ${project}...`);
-    await testProject(project, shouldPublish);
+    await testProject(project, shouldPublish, forceCheck);
   }
   console.log(`Successfully processed all projects: ${projectNames.join(', ')}`);
 }
 
-async function testProject(project, shouldPublish) {
+async function testProject(project, shouldPublish, forceCheck) {
   let originalCwd = process.cwd();
   let exampleDir = path.resolve(`./examples/${project}`);
   if (!await exists(exampleDir)) {
@@ -124,14 +129,22 @@ async function testProject(project, shouldPublish) {
     await run(config.beforeDecaffeinateScript);
   }
 
-  let conversionResult = await checkConversion(config);
+  let conversionResult = await checkConversion(config, forceCheck);
   if (!conversionResult.passed) {
     await run('git add -A');
     await run('git commit --no-verify -m "Save decaffeinate error details"');
 
     await run('bulk-decaffeinate convert --skip-verify -p decaffeinate-successful-files.txt');
   } else {
-    await run('bulk-decaffeinate convert --skip-verify');
+    try {
+      await run('bulk-decaffeinate convert --skip-verify');
+    } catch (e) {
+      if (config.expectConversionSuccess && !forceCheck) {
+        process.chdir(originalCwd);
+        e.retryWithForceCheck = true;
+      }
+      throw e;
+    }
   }
 
   await run('bulk-decaffeinate clean');
@@ -185,10 +198,10 @@ function getDependencies(config) {
   return dependencies;
 }
 
-async function checkConversion(config) {
+async function checkConversion(config, forceCheck) {
   // To reduce build times, skip the check step if we expect success. If there
   // is a problem later, it will end up as a crash and the build will fail.
-  if (config.expectConversionSuccess) {
+  if (config.expectConversionSuccess && !forceCheck) {
     return {
       passed: true,
     };
