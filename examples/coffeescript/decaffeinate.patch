@@ -78,7 +78,7 @@ index 00000000..7638b145
 +  echo 'Passed!'
 +done
 diff --git a/test/classes.js b/test/classes.js
-index bc166165..ad42d75a 100644
+index a2fcf673..13a6591e 100644
 --- a/test/classes.js
 +++ b/test/classes.js
 @@ -594,7 +594,8 @@ test('variables in constructor bodies are correctly scoped', () => {
@@ -144,19 +144,19 @@ index 6540e78c..00641e2b 100644
        return delete global[magicKey];
      }
 diff --git a/test/operators.js b/test/operators.js
-index 613a3b7d..55e45a69 100644
+index f80726d0..86529abe 100644
 --- a/test/operators.js
 +++ b/test/operators.js
-@@ -252,7 +252,8 @@ test('#1100: precedence in or-test compilation of `in`', () => {
+@@ -259,7 +259,8 @@ test('#1100: precedence in or-test compilation of `in`', () => {
    return ok(!([1, 0 || 1].includes(0)));
  });
 
--test('#1630: `in` should check `hasOwnProperty`', () => ok(!Array.from({ length: 1 }).includes(undefined)));
+-test('#1630: `in` should check `hasOwnProperty`', () => {
 +// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#undefined-in-arr-returns-true-for-sparse-arrays-without-explicit-undefineds
-+skippedTest('#1630: `in` should check `hasOwnProperty`', () => ok(!Array.from({ length: 1 }).includes(undefined)));
-
- test('#1714: lexer bug with raw range `for` followed by `in`', () => {
-   for (let i = 1; i <= 2; i++) { 0; }
++skippedTest('#1630: `in` should check `hasOwnProperty`', () => {
+   let needle;
+   return ok((needle = undefined, !Array.from({ length: 1 }).includes(needle)));
+ });
 diff --git a/test/scope.js b/test/scope.js
 index e3baf5a2..b32c49d8 100644
 --- a/test/scope.js
