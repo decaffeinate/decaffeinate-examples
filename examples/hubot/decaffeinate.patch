@@ -1,11 +1,11 @@
 diff --git a/package.json b/package.json
-index b61c389..ba3eb31 100644
+index 4477c83..919fdea 100644
 --- a/package.json
 +++ b/package.json
-@@ -55,7 +55,7 @@
-     "prestart": "script/dotenv",
+@@ -52,7 +52,7 @@
+   "scripts": {
+     "clean": "rm -rf lib/",
      "start": "bin/hubot",
-     "pretest": "script/dotenv",
 -    "test": "mocha --require coffee-errors --compilers coffee:coffee-script",
 +    "test": "mocha --require coffee-errors --require babel-register --require babel-polyfill --compilers coffee:coffee-script",
      "test:smoke": "coffee src/**/*.coffee",
