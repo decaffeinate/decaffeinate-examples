@@ -70,7 +70,8 @@ async function testProject(project, shouldPublish, forceCheck) {
     }
   } else {
     let cloneSuffix = config.branch ? `--branch ${config.branch}` : '';
-    await run(`git clone --depth=50 ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
+    let depthFlag = config.commit ? '' : '--depth=50';
+    await run(`git clone ${depthFlag} ${config.cloneUrl} ${repoDir} ${cloneSuffix}`);
   }
 
   if (config.useDefaultConfig) {
@@ -91,6 +92,10 @@ async function testProject(project, shouldPublish, forceCheck) {
 
   process.chdir(repoDir);
 
+  if (config.commit) {
+    await run(`git checkout ${config.commit}`);
+  }
+
   if (config.isMultiProject) {
     await run(`git init`);
     await run(`git add -A`);
@@ -103,7 +108,7 @@ async function testProject(project, shouldPublish, forceCheck) {
     // If we're using a custom branch/ref, it may not be valid to push to it, so
     // skip this step. (Currently this fits all use cases, but it can be made
     // more flexible later if necessary.)
-    if (!config.branch && !config.isMultiProject) {
+    if (!config.branch && !config.commit && !config.isMultiProject) {
       try {
         await run('git push fork');
       } catch (e) {
