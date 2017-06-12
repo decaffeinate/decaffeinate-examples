@@ -1,7 +1,6 @@
 language: node_js
 node_js:
   - "6"
-  - "4"
 before_install:
   - git config --global user.name 'Test Person'
   - git config --global user.email 'test@example.com'
