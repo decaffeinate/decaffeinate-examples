@@ -1,5 +1,5 @@
 diff --git a/spec/compile-cache-spec.js b/spec/compile-cache-spec.js
-index 76699d9..151bf14 100644
+index 246efe2..958f281 100644
 --- a/spec/compile-cache-spec.js
 +++ b/spec/compile-cache-spec.js
 @@ -108,7 +108,7 @@ describe('CompileCache', function () {
@@ -30,7 +30,7 @@ index 76699d9..151bf14 100644
        return expect(Array.isArray(error.getRawStack())).toBe(true)
      })
 diff --git a/spec/config-spec.js b/spec/config-spec.js
-index fbfc5f1..a1887c5 100644
+index ac5db8e..7566278 100644
 --- a/spec/config-spec.js
 +++ b/spec/config-spec.js
 @@ -1310,7 +1310,7 @@ foo:
@@ -43,10 +43,10 @@ index fbfc5f1..a1887c5 100644
            })
          })
 diff --git a/spec/integration/helpers/start-atom.js b/spec/integration/helpers/start-atom.js
-index 1df7ceb..e86b967 100644
+index 6d5b6bb..795296d 100644
 --- a/spec/integration/helpers/start-atom.js
 +++ b/spec/integration/helpers/start-atom.js
-@@ -104,7 +104,12 @@ const buildAtomClient = function (args, env) {
+@@ -103,7 +103,12 @@ const buildAtomClient = function (args, env) {
          .windowHandles(cb)
      }).addCommand('waitForPaneItemCount', function (count, timeout, cb) {
        return this.waitUntil(function () {
@@ -59,7 +59,7 @@ index 1df7ceb..e86b967 100644
 +        })
            .then(({value}) => value === count)
        }
-       , timeout)
+         , timeout)
 diff --git a/static/index.html b/static/index.html
 index 386481b..ab239dd 100644
 --- a/static/index.html
