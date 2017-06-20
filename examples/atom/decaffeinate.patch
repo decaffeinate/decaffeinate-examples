@@ -60,16 +60,3 @@ index 6d5b6bb..795296d 100644
            .then(({value}) => value === count)
        }
          , timeout)
-diff --git a/static/index.html b/static/index.html
-index 386481b..ab239dd 100644
---- a/static/index.html
-+++ b/static/index.html
-@@ -1,7 +1,7 @@
- <!DOCTYPE html>
- <html>
- <head>
--  <meta http-equiv="Content-Security-Policy" content="default-src * atom://*; img-src blob: data: * atom://*; script-src 'self'; style-src 'self' 'unsafe-inline'; media-src blob: data: mediastream: * atom://*;">
-+  <meta http-equiv="Content-Security-Policy" content="default-src * atom://*; img-src blob: data: * atom://*; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src blob: data: mediastream: * atom://*;">
-   <script src="index.js"></script>
- </head>
- <body tabindex="-1">
