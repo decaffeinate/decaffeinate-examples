@@ -122,7 +122,13 @@ async function testProject(project, shouldPublish, forceCheck) {
     await run(`cat ${exampleDir}/.gitignore_extension >> .gitignore`);
   }
 
-  await run('npm install');
+  try {
+    await run('npm install');
+  } catch (e) {
+    // In some projects, install fails the first time and works the second time,
+    // so just try twice.
+    await run('npm install');
+  }
   let dependencies = getDependencies(config);
   if (dependencies.length > 0) {
     await run(`npm install --save-dev --save-exact ${dependencies.join(' ')}`);

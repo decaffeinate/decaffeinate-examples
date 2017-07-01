@@ -13,12 +13,6 @@ export default {
     if [ -e /etc/init.d/xvfb ]; then
       sh -e /etc/init.d/xvfb start
     fi
-    if [ -e ~/.nvm/nvm.sh ]; then
-      source ~/.nvm/nvm.sh
-    fi
-    nvm install 5.1.1
-    rm -rf node_modules
-    rm -rf bower-components
     rm -rf public
     npm install
     
