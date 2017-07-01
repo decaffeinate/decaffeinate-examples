@@ -99,7 +99,7 @@ async function testProject(project, shouldPublish, forceCheck) {
   if (config.isMultiProject) {
     await run(`git init`);
     await run(`git add -A`);
-    await run(`git commit --no-verify -m "Initial commit"`);
+    await run(`git commit --no-verify -m "Initial commit" > /dev/null`);
   }
 
   if (shouldPublish) {
