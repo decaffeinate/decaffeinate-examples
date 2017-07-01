@@ -152,7 +152,7 @@ async function testProject(project, shouldPublish, forceCheck) {
     }
   }
 
-  await run('bulk-decaffeinate clean');
+  await run('bulk-decaffeinate clean > /dev/null');
   let testResult;
   // Make the patch its own commit after everything else so it's easier to
   // iterate on.
@@ -180,7 +180,7 @@ async function testProject(project, shouldPublish, forceCheck) {
     await run('git push fork HEAD:decaffeinate -f');
 
     await run('git checkout --orphan gh-pages');
-    await run('git rm --cached -r .');
+    await run('git rm --cached -r . > /dev/null');
     await run('git add conversion-status.svg');
     await run('git add test-status.svg');
     await run('git commit --no-verify -m "Add status SVGs to gh-pages branch"');
