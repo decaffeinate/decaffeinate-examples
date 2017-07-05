@@ -8,5 +8,4 @@ module.exports = {
   jscodeshiftScripts: [
     'top-level-this-to-exports.js',
   ],
-  decaffeinateArgs: ['--keep-commonjs', '--prefer-const', '--enable-babel-constructor-workaround'],
 };
