@@ -187,9 +187,10 @@ index fb5e78004..a94be4631 100644
  var oldIt = global.it;
  global.it = function(description, testFn) {
 diff --git a/vendor/scripts/polyfill.js b/vendor/scripts/polyfill.js
-new file mode 100644
+new file mode 120000
 index 000000000..8c2723ed4
 --- /dev/null
 +++ b/vendor/scripts/polyfill.js
 @@ -0,0 +1 @@
 +../../node_modules/babel-polyfill/dist/polyfill.js
+\ No newline at end of file
