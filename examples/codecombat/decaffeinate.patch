@@ -13,10 +13,10 @@ index 164185f69..4275f9e0b 100644
 +  ]
  }
 diff --git a/app/views/TestView.js b/app/views/TestView.js
-index fdf720fa4..8317569a6 100644
+index abc2ed909..ae9ba09c0 100644
 --- a/app/views/TestView.js
 +++ b/app/views/TestView.js
-@@ -23,6 +23,7 @@ const template = require('templates/test-view');
+@@ -33,6 +33,7 @@ const template = require('templates/test-view');
  const requireUtils = require('lib/requireUtils');
  const storage = require('core/storage');
 
@@ -25,10 +25,10 @@ index fdf720fa4..8317569a6 100644
  require('tests');
 
 diff --git a/brunch-static-stuff.js b/brunch-static-stuff.js
-index 6daa7a2d6..3f3fe14c3 100644
+index 384862d97..9bdf9f0ab 100644
 --- a/brunch-static-stuff.js
 +++ b/brunch-static-stuff.js
-@@ -81,7 +81,7 @@ class BrunchStaticStuff {
+@@ -89,7 +89,7 @@ class BrunchStaticStuff {
        return i.text(t.text);
      });
 
@@ -38,10 +38,10 @@ index 6daa7a2d6..3f3fe14c3 100644
 
      return cb(null, [{ filename: outFile, content: c.html() }], deps);
 diff --git a/config.js b/config.js
-index 1af965587..f3e272183 100644
+index 78eaca5f9..cb1613513 100644
 --- a/config.js
 +++ b/config.js
-@@ -73,7 +73,7 @@ exports.config = {
+@@ -78,7 +78,7 @@ exports.config = {
            pattern: /\A\Z/,
          },
          afterBrunch: [
@@ -50,7 +50,7 @@ index 1af965587..f3e272183 100644
          ],
        },
      },
-@@ -112,11 +112,11 @@ exports.config = {
+@@ -117,11 +117,11 @@ exports.config = {
            regJoin('^app/collections'),
            regJoin('^app/core'),
            regJoin('^app/views/core'),
@@ -67,7 +67,7 @@ index 1af965587..f3e272183 100644
          ],
 
          // - Karma is a bit more tricky to get to work. For now just dump everything into one file so it doesn't need to load anything through ModuleLoader.
-@@ -139,8 +139,8 @@ exports.config = {
+@@ -144,8 +144,8 @@ exports.config = {
          // - world.js, used by the worker to generate the world in game
          'javascripts/world.js': [
            regJoin('^app/lib/world(?!/test)'),
@@ -78,16 +78,16 @@ index 1af965587..f3e272183 100644
            regJoin('^vendor/scripts/Box2dWeb-2.1.a.3'),
            regJoin('^vendor/scripts/string_score.js'),
            regJoin('^bower_components/underscore.string'),
-@@ -149,7 +149,7 @@ exports.config = {
+@@ -154,7 +154,7 @@ exports.config = {
 
          // - vendor.js, all the vendor libraries
          'javascripts/vendor.js': [
 -          regJoin(`^vendor/scripts/(?!(Box2d|coffeescript|difflib|diffview|jasmine|co|${gameLibraries}))`),
 +          regJoin(`^vendor/scripts/(?!(Box2d|coffeescript|difflib|diffview|jasmine|polyfill|co|${gameLibraries}))`),
-           regJoin(`^bower_components/(?!(aether|d3|treema|three.js|esper.js|jquery-ui|${gameLibraries}))`),
+           regJoin(`^bower_components/(?!(aether|d3|treema|three.js|esper.js|jquery-ui|vimeo-player-js|${gameLibraries}))`),
            'bower_components/treema/treema-utils.js',
          ],
-@@ -161,7 +161,7 @@ exports.config = {
+@@ -166,7 +166,7 @@ exports.config = {
          ],
 
          'javascripts/whole-vendor.js': TRAVIS ? [
@@ -96,7 +96,7 @@ index 1af965587..f3e272183 100644
            regJoin('^bower_components/(?!aether|esper.js)'),
          ] : [],
 
-@@ -186,6 +186,7 @@ exports.config = {
+@@ -192,6 +192,7 @@ exports.config = {
          'javascripts/app/vendor/coffeescript.js': 'vendor/scripts/coffeescript.js',
          'javascripts/app/vendor/difflib.js': 'vendor/scripts/difflib.js',
          'javascripts/app/vendor/diffview.js': 'vendor/scripts/diffview.js',
@@ -104,7 +104,7 @@ index 1af965587..f3e272183 100644
          'javascripts/app/vendor/treema.js': 'bower_components/treema/treema.js',
          'javascripts/app/vendor/jasmine-bundle.js': regJoin('^vendor/scripts/jasmine'),
          'javascripts/app/vendor/jasmine-mock-ajax.js': 'vendor/scripts/jasmine-mock-ajax.js',
-@@ -265,6 +266,9 @@ exports.config = {
+@@ -271,6 +272,9 @@ exports.config = {
    framework: 'backbone',
 
    plugins: {
@@ -114,7 +114,7 @@ index 1af965587..f3e272183 100644
      coffeelint: {
        pattern: /^app\/.*\.coffee$/,
        options: {
-@@ -319,6 +323,7 @@ exports.config = {
+@@ -325,6 +329,7 @@ exports.config = {
 
  const dirStack = ['./app'];
  const coffeeFiles = [];
@@ -156,7 +156,7 @@ index c7ed0175d..e894e3b48 100644
 
      // Continuous Integration mode
 diff --git a/package.json b/package.json
-index 1cc10e308..dc48ad89c 100644
+index ab974ac87..ca244cf81 100644
 --- a/package.json
 +++ b/package.json
 @@ -33,10 +33,10 @@
@@ -174,7 +174,7 @@ index 1cc10e308..dc48ad89c 100644
      "jasmine-node": "jasmine-node",
      "multicore": "coffee multicore.coffee",
 diff --git a/spec/helpers/helper.js b/spec/helpers/helper.js
-index c7e01170a..6d9c7d9c9 100644
+index fb5e78004..a94be4631 100644
 --- a/spec/helpers/helper.js
 +++ b/spec/helpers/helper.js
 @@ -2,6 +2,8 @@ var _ = require('lodash');
@@ -187,10 +187,9 @@ index c7e01170a..6d9c7d9c9 100644
  var oldIt = global.it;
  global.it = function(description, testFn) {
 diff --git a/vendor/scripts/polyfill.js b/vendor/scripts/polyfill.js
-new file mode 120000
-index 000000000..0f0c30236
+new file mode 100644
+index 000000000..8c2723ed4
 --- /dev/null
 +++ b/vendor/scripts/polyfill.js
 @@ -0,0 +1 @@
 +../../node_modules/babel-polyfill/dist/polyfill.js
-\ No newline at end of file
