@@ -1,7 +1,7 @@
-diff --git a/gulpfile.js b/gulpfile.js
+diff --git c/gulpfile.js w/gulpfile.js
 index c775c97..ec8d3f9 100644
---- a/gulpfile.js
-+++ b/gulpfile.js
+--- c/gulpfile.js
++++ w/gulpfile.js
 @@ -1,3 +1,4 @@
 +/* eslint-disable */
  var gulp = require('gulp');
@@ -28,3 +28,16 @@ index c775c97..ec8d3f9 100644
  });
 
  gulp.task('default', ['lint', 'test']);
+diff --git c/package.json w/package.json
+index 2d253c0..b10a354 100644
+--- c/package.json
++++ w/package.json
+@@ -43,7 +43,7 @@
+     "vinyl-source-stream": "^1.1.0"
+   },
+   "scripts": {
+-    "test": "gulp"
++    "test": "gulp test"
+   },
+   "eslintConfig": {
+     "extends": "eslint-config-postcss/es5"
