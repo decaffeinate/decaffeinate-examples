@@ -23,6 +23,7 @@ export default {
     git submodule update --init
     npm install path@0.11
     npm install util
+    npm install -g phantomjs@1.9.20
     ./node_modules/.bin/js-cake build
     ./node_modules/.bin/js-cake test
   `],
