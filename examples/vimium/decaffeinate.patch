@@ -33,6 +33,7 @@ index 9532afc..4acf507 100644
 +    <script type="text/javascript" src="../node_modules/babel-polyfill/dist/polyfill.js"></script>
      <script type="text/javascript" src="../lib/utils.js"></script>
      <script type="text/javascript" src="../lib/dom_utils.js"></script>
+     <script type="text/javascript" src="../lib/settings.js"></script>
      <script type="text/javascript" src="../lib/keyboard_utils.js"></script>
 diff --git i/pages/vomnibar.html w/pages/vomnibar.html
 index 87acc08..392c03f 100644
@@ -44,6 +45,7 @@ index 87acc08..392c03f 100644
      <title>Vomnibar</title>
 +    <script type="text/javascript" src="../node_modules/babel-polyfill/dist/polyfill.js"></script>
      <script type="text/javascript" src="../lib/utils.js"></script>
+     <script type="text/javascript" src="../lib/settings.js"></script>
      <script type="text/javascript" src="../lib/keyboard_utils.js"></script>
      <script type="text/javascript" src="../lib/dom_utils.js"></script>
 diff --git i/tests/dom_tests/dom_tests.html w/tests/dom_tests/dom_tests.html

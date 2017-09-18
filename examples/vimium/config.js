@@ -6,7 +6,7 @@ export default {
     'js-cake',
   ],
   expectConversionSuccess: true,
-  expectTestSuccess: false,
+  expectTestSuccess: true,
   beforeDecaffeinateScript: `
     set -e
     for dir in background_scripts content_scripts lib pages tests/unit_tests tests/dom_tests
