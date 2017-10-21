@@ -77,7 +77,7 @@ index a8b07d4..6cc84bf 100644
  };
 
 diff --git a/package.json b/package.json
-index 3cab38c..b008c0f 100644
+index d06b7e2..99b2e89 100644
 --- a/package.json
 +++ b/package.json
 @@ -27,7 +27,7 @@
@@ -90,12 +90,12 @@ index 3cab38c..b008c0f 100644
    "devDependencies": {
      "babel-cli": "6.26.0",
 diff --git a/src/api.js b/src/api.js
-index 5c62ff9..7231e71 100644
+index 4eba0bb..250e5ea 100644
 --- a/src/api.js
 +++ b/src/api.js
-@@ -20,7 +20,7 @@ const chroma = function () {
-   return new Color(...arguments);
+@@ -21,7 +21,7 @@ const chroma = function () {
  };
+ chroma.default = chroma;
 
 -const _interpolators = [];
 +var _interpolators = [];
