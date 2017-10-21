@@ -1,11 +1,11 @@
 diff --git a/Cakefile.js b/Cakefile.js
-index 9552aa4..e3b9025 100644
+index d2dfebb..e37d038 100644
 --- a/Cakefile.js
 +++ b/Cakefile.js
-@@ -15,13 +15,12 @@ const glob = require('glob');
+@@ -23,13 +23,12 @@ const glob = require('glob');
  const path = require('path');
  const browserify = require('browserify');
- const CoffeeScript = require('coffee-script');
+ const CoffeeScript = require('coffeescript');
 -const { exec } = require('child_process');
 +const { exec, execSync } = require('child_process');
 
@@ -18,7 +18,7 @@ index 9552aa4..e3b9025 100644
  };
 
  task('compile', 'Compile Coffeelint', () => {
-@@ -32,16 +31,16 @@ task('compile', 'Compile Coffeelint', () => {
+@@ -40,16 +39,16 @@ task('compile', 'Compile Coffeelint', () => {
  });
 
  task('compile:commandline', 'Compiles commandline.js', () => {
@@ -41,7 +41,7 @@ index 9552aa4..e3b9025 100644
              result.push(coffeeSync(`src/${src}`, `lib/${dest}`));
          }
          return result;
-@@ -52,8 +51,9 @@ task('compile:browserify', 'Uses browserify to compile coffeelint', () => {
+@@ -60,8 +59,9 @@ task('compile:browserify', 'Uses browserify to compile coffeelint', () => {
      const opts =
          { standalone: 'coffeelint' };
      const b = browserify(opts);
@@ -65,7 +65,7 @@ index 3148fdc..56c21cd 100755
      require('../src/commandline');
  } else {
 diff --git a/package.json b/package.json
-index 53485b7..0cb349c 100644
+index 7e99fc0..ba6cac1 100644
 --- a/package.json
 +++ b/package.json
 @@ -46,17 +46,17 @@
@@ -97,12 +97,12 @@ index 53485b7..0cb349c 100644
    }
  }
 diff --git a/vowsrunner.js b/vowsrunner.js
-index 2433979..b589667 100755
+index c4916f5..2de7dce 100755
 --- a/vowsrunner.js
 +++ b/vowsrunner.js
 @@ -1,4 +1,5 @@
  #!/usr/bin/env node
 +require('babel-register')
- require('coffee-script/register')
+ require('coffeescript/register')
  require('./node_modules/vows/bin/vows')
 
