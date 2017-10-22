@@ -4,7 +4,7 @@ export default {
     {url: 'https://github.com/atom/apm.git', name: 'apm'},
     {url: 'https://github.com/atom/archive-view.git', name: 'archive-view'},
     {url: 'https://github.com/atom/ascii-art.git', name: 'ascii-art'},
-    {url: 'https://github.com/atom/atom.git', name: 'atom'},
+    {url: 'https://github.com/atom/atom.git', name: 'atom', branch: 'v1.20.0'},
     {url: 'https://github.com/atom/atom-keymap.git', name: 'atom-keymap'},
     {url: 'https://github.com/atom/atom-selector-linter.git', name: 'atom-selector-linter'},
     {url: 'https://github.com/atom/atom-space-pen-views.git', name: 'atom-space-pen-views'},

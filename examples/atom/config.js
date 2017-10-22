@@ -1,5 +1,6 @@
 export default {
   cloneUrl: 'https://github.com/atom/atom.git',
+  branch: 'v1.20.0',
   forkUrl: 'git@github.com:decaffeinate-examples/atom.git',
   useDefaultConfig: true,
   extraDependencies: [
