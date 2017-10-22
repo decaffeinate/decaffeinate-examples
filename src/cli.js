@@ -64,8 +64,9 @@ async function testProject(project, shouldPublish, forceCheck) {
   // all CoffeeScript projects in the atom org). In this case, we make a fresh
   // repo with the contents of other cloned repos.
   if (config.isMultiProject) {
-    for (let {url, name} of config.cloneRepos) {
-      await run(`git clone --depth=50 ${url} ${repoDir}/${name}`);
+    for (let {url, branch, name} of config.cloneRepos) {
+      let cloneSuffix = branch ? `--branch ${branch}` : '';
+      await run(`git clone --depth=50 ${cloneSuffix} ${url} ${repoDir}/${name}`);
       await run(`rm -rf ${repoDir}/${name}/.git`);
     }
   } else {
