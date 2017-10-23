@@ -162,5 +162,6 @@ export default {
     'eslint-plugin-promise',
     'eslint-plugin-standard',
   ],
+  expectConversionSuccess: true,
   skipTests: true,
 };
