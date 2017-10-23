@@ -184,14 +184,25 @@ async function testProject(project, shouldPublish, forceCheck) {
   await run('git commit --no-verify -m "Update README and badges with decaffeinate results"');
 
   if (shouldPublish) {
-    await run('git push fork HEAD:decaffeinate -f');
+    try {
+      await run('git push fork HEAD:decaffeinate -f');
+    } catch (e) {
+      await run('git fetch --unshallow');
+      await run('git push fork HEAD:decaffeinate -f');
+    }
 
     await run('git checkout --orphan gh-pages');
     await run('git rm --cached -r . > /dev/null');
     await run('git add conversion-status.svg');
     await run('git add test-status.svg');
     await run('git commit --no-verify -m "Add status SVGs to gh-pages branch"');
-    await run('git push fork HEAD:gh-pages -f');
+
+    try {
+      await run('git push fork HEAD:gh-pages -f');
+    } catch (e) {
+      await run('git fetch --unshallow');
+      await run('git push fork HEAD:gh-pages -f');
+    }
   }
 
   process.chdir(originalCwd);
