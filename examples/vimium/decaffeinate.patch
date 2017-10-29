@@ -1,8 +1,8 @@
-diff --git i/Cakefile.js w/Cakefile.js
-index 63532f7..39c3036 100644
---- i/Cakefile.js
-+++ w/Cakefile.js
-@@ -81,8 +81,17 @@ var visitDirectory = (directory, visitor) =>
+diff --git a/Cakefile.js b/Cakefile.js
+index 32da02e..a6c01ce 100644
+--- a/Cakefile.js
++++ b/Cakefile.js
+@@ -80,8 +80,17 @@ var visitDirectory = (directory, visitor) =>
      return visitor(filepath);
    });
  task('build', 'compile all coffeescript files to javascript', () => {
@@ -22,10 +22,10 @@ index 63532f7..39c3036 100644
  });
 
  task('clean', 'removes any js files which were compiled from coffeescript', () =>
-diff --git i/pages/hud.html w/pages/hud.html
-index 9532afc..4acf507 100644
---- i/pages/hud.html
-+++ w/pages/hud.html
+diff --git a/pages/hud.html b/pages/hud.html
+index 3e8cf97..18e81d1 100644
+--- a/pages/hud.html
++++ b/pages/hud.html
 @@ -2,6 +2,7 @@
    <head>
      <title>HUD</title>
@@ -34,11 +34,10 @@ index 9532afc..4acf507 100644
      <script type="text/javascript" src="../lib/utils.js"></script>
      <script type="text/javascript" src="../lib/dom_utils.js"></script>
      <script type="text/javascript" src="../lib/settings.js"></script>
-     <script type="text/javascript" src="../lib/keyboard_utils.js"></script>
-diff --git i/pages/vomnibar.html w/pages/vomnibar.html
-index 87acc08..392c03f 100644
---- i/pages/vomnibar.html
-+++ w/pages/vomnibar.html
+diff --git a/pages/vomnibar.html b/pages/vomnibar.html
+index 19736d7..79f5fdc 100644
+--- a/pages/vomnibar.html
++++ b/pages/vomnibar.html
 @@ -1,6 +1,7 @@
  <html>
    <head>
@@ -47,11 +46,23 @@ index 87acc08..392c03f 100644
      <script type="text/javascript" src="../lib/utils.js"></script>
      <script type="text/javascript" src="../lib/settings.js"></script>
      <script type="text/javascript" src="../lib/keyboard_utils.js"></script>
-     <script type="text/javascript" src="../lib/dom_utils.js"></script>
-diff --git i/tests/dom_tests/dom_tests.html w/tests/dom_tests/dom_tests.html
-index d2e795d..78a7e77 100644
---- i/tests/dom_tests/dom_tests.html
-+++ w/tests/dom_tests/dom_tests.html
+diff --git a/src/tests/unit_tests/commands_test.js b/src/tests/unit_tests/commands_test.js
+index 93a7443..f43706b 100644
+--- a/src/tests/unit_tests/commands_test.js
++++ b/src/tests/unit_tests/commands_test.js
+@@ -32,7 +32,7 @@ global.Settings = { postUpdateHooks: {}, get() { return ''; }, set() {} };
+ const { Commands } = require('../../background_scripts/commands.js');
+
+ // Include mode_normal to check that all commands have been implemented.
+-global.KeyHandlerMode = (global.Mode = {});
++global.KeyHandlerMode = (global.Mode = class {});
+ global.KeyboardUtils = { platform: '' };
+ extend(global, require('../../content_scripts/link_hints.js'));
+ extend(global, require('../../content_scripts/marks.js'));
+diff --git a/tests/dom_tests/dom_tests.html b/tests/dom_tests/dom_tests.html
+index 37cd43e..11da579 100644
+--- a/tests/dom_tests/dom_tests.html
++++ b/tests/dom_tests/dom_tests.html
 @@ -29,6 +29,7 @@
      <link rel="stylesheet" type="text/css" href="../../content_scripts/vimium.css" />
      <script type="text/javascript" src="bind.js"></script>
