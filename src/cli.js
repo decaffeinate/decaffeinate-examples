@@ -5,6 +5,8 @@ import path from 'path';
 import downloadFile from './downloadFile';
 import run from './run';
 
+const NUM_WORKERS_ARG = '--num-workers 2';
+
 export default function cli() {
   let project = null;
   commander
@@ -146,10 +148,12 @@ async function testProject(project, shouldPublish, forceCheck) {
     await run('git add -A');
     await run('git commit --no-verify -m "Save decaffeinate error details"');
 
-    await run('bulk-decaffeinate convert --skip-verify -p decaffeinate-successful-files.txt');
+    await run(
+      `bulk-decaffeinate convert ${NUM_WORKERS_ARG} --skip-verify -p decaffeinate-successful-files.txt`
+    );
   } else {
     try {
-      await run('bulk-decaffeinate convert --skip-verify');
+      await run(`bulk-decaffeinate convert ${NUM_WORKERS_ARG} --skip-verify`);
     } catch (e) {
       if (config.expectConversionSuccess && !forceCheck) {
         process.chdir(originalCwd);
@@ -237,7 +241,7 @@ async function checkConversion(config, forceCheck) {
       passed: true,
     };
   }
-  await run('bulk-decaffeinate check');
+  await run(`bulk-decaffeinate check ${NUM_WORKERS_ARG}`);
   let hasErrorFile = await exists('./decaffeinate-errors.log');
   if (hasErrorFile) {
     let results = JSON.parse((await readFile('decaffeinate-results.json')).toString());
