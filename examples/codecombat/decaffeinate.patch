@@ -12,6 +12,17 @@ index 164185f..4275f9e 100644
 +    "bower_components"
 +  ]
  }
+diff --git a/app/assets/javascripts/run-tests.js b/app/assets/javascripts/run-tests.js
+index 953f67e..d6a69d7 100644
+--- a/app/assets/javascripts/run-tests.js
++++ b/app/assets/javascripts/run-tests.js
+@@ -1,5 +1,6 @@
+ // Helper for running tests through Karma.
+ // Hooks into the test view logic for running tests.
++require('babel-polyfill')
+ require('app/app.js')
+
+ window.userObject = {_id:'1'};
 diff --git a/index.js b/index.js
 index 3abc77f..71f6d4a 100644
 --- a/index.js
