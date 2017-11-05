@@ -37,6 +37,18 @@ index e008887..d10ebdf 100644
 
      transports: ['polling'],
 
+diff --git a/package.json b/package.json
+index 2d78ee9..b42d8fe 100644
+--- a/package.json
++++ b/package.json
+@@ -33,7 +33,6 @@
+     "test": "./node_modules/.bin/karma start",
+     "predeploy": "echo Starting deployment--hold onto your butts.; echo Skipping brunch build --production",
+     "postdeploy": "echo Deployed. Unclench.",
+-    "postinstall": "bower install && webpack",
+     "webpack": "webpack",
+     "bower": "bower",
+     "dev": "webpack --watch & npm run nodemon",
 diff --git a/spec/helpers/helper.js b/spec/helpers/helper.js
 index fb5e780..a94be46 100644
 --- a/spec/helpers/helper.js
