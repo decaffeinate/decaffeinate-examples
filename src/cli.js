@@ -125,16 +125,9 @@ async function testProject(project, shouldPublish, forceCheck) {
     await run(`cat ${exampleDir}/.gitignore_extension >> .gitignore`);
   }
 
-  try {
-    await run('npm install');
-  } catch (e) {
-    // In some projects, install fails the first time and works the second time,
-    // so just try twice.
-    await run('npm install');
-  }
   let dependencies = getDependencies(config);
   if (dependencies.length > 0) {
-    await run(`npm install --save-dev --save-exact ${dependencies.join(' ')}`);
+    await run(`npm install --save-dev --save-exact --ignore-scripts ${dependencies.join(' ')}`);
   }
   await run('git add -A');
   await run('git commit --no-verify -m "Add dependencies and config to prepare for decaffeinate"');
@@ -272,6 +265,7 @@ async function runTests(config) {
         await run(command);
       }
     } else {
+      await run('npm install');
       await run('npm test');
     }
     return 'PASSED';

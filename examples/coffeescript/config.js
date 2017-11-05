@@ -10,11 +10,12 @@ export default {
   ],
   testCommands: [`
     set -e
+    npm install
     ./node_modules/.bin/babel src -d lib/coffee-script
     git commit -a -m 'Rebuild CoffeeScript with new code'
     ./check-coffeescript-examples.sh
     ./node_modules/.bin/js-cake test
   `],
   expectConversionSuccess: true,
-  expectTestSuccess: false,
+  expectTestSuccess: true,
 };
