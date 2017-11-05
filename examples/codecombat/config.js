@@ -4,7 +4,7 @@ export default {
   useDefaultConfig: true,
   extraDependencies: [
     'babel-plugin-transform-remove-strict-mode',
-    'babel-brunch@6.0.0',
+    'babel-loader',
   ],
   testCommands: [`
     set -e
