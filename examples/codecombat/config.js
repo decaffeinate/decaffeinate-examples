@@ -16,6 +16,11 @@ export default {
     rm -rf public
     # Some dependency issues make the install fail the first time, so just try again.
     npm install || npm install
+    # node-sass doesn't get set up correctly for some reason, so set it up again.
+    npm install node-sass
+    
+    ./node_modules/.bin/bower install
+    ./node_modules/.bin/webpack
     
     node index.js --unittest &
     n=0
