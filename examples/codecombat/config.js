@@ -14,7 +14,8 @@ export default {
       sh -e /etc/init.d/xvfb start
     fi
     rm -rf public
-    npm install
+    # Some dependency issues make the install fail the first time, so just try again.
+    npm install || npm install
     
     node index.js --unittest &
     n=0
