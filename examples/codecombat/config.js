@@ -23,6 +23,9 @@ export default {
     ./node_modules/.bin/bower install
     ./node_modules/.bin/webpack
     
+    git add -f public/javascripts/test.js
+    git commit -m 'Save bad built JS file for diagnostic purposes'
+    
     node index.js --unittest &
     n=0
     until [ $n -ge 60 ]; do curl http://localhost:3000 && break; n=$[$n+1]; sleep 1; done
