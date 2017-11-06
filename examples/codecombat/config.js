@@ -18,6 +18,7 @@ export default {
     npm install || npm install
     # node-sass doesn't get set up correctly for some reason, so set it up again.
     npm install node-sass
+    npm install request
     
     ./node_modules/.bin/bower install
     ./node_modules/.bin/webpack
