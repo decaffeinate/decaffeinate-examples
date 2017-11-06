@@ -1,17 +1,30 @@
 diff --git a/.babelrc b/.babelrc
-index 164185f..4275f9e 100644
+index 164185f..e893dc3 100644
 --- a/.babelrc
 +++ b/.babelrc
-@@ -3,5 +3,8 @@
+@@ -3,5 +3,9 @@
    "plugins": ["transform-remove-strict-mode"],
    "parserOpts": {
      "allowReturnOutsideFunction": true
 -  }
 +  },
 +  "ignore": [
-+    "bower_components"
++    "bower_components",
++    "vendor"
 +  ]
  }
+diff --git a/app/app.js b/app/app.js
+index 90066c7..3dd1319 100644
+--- a/app/app.js
++++ b/app/app.js
+@@ -2,6 +2,7 @@ global.$ = window.$ = global.jQuery = window.jQuery = require('jquery');
+ import 'bootstrap'
+ import './app.sass'
+
++require('babel-polyfill')
+ require('app/vendor.js')
+
+ // require.context('app/schemas', true, /.*\.(coffee|jade)/)
 diff --git a/app/assets/javascripts/run-tests.js b/app/assets/javascripts/run-tests.js
 index 953f67e..d6a69d7 100644
 --- a/app/assets/javascripts/run-tests.js
