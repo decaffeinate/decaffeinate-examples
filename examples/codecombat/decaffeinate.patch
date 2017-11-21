@@ -62,7 +62,7 @@ index e008887fa..d10ebdf1d 100644
      transports: ['polling'],
 
 diff --git a/package.json b/package.json
-index 2d78ee9a9..b42d8feaa 100644
+index c2410e7b0..0100228d7 100644
 --- a/package.json
 +++ b/package.json
 @@ -33,7 +33,6 @@
@@ -87,7 +87,7 @@ index fb5e78004..a94be4631 100644
  var oldIt = global.it;
  global.it = function(description, testFn) {
 diff --git a/webpack.base.config.js b/webpack.base.config.js
-index b0959b487..65d859731 100644
+index 2e3017c7d..759aae42b 100644
 --- a/webpack.base.config.js
 +++ b/webpack.base.config.js
 @@ -8,6 +8,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -107,10 +107,10 @@ index b0959b487..65d859731 100644
 -        './app/core/utils.coffee',
 +        './app/core/CocoClass.js',
 +        './app/core/utils.js',
-         './vendor/scripts/Box2dWeb-2.1.a.3',
          './vendor/scripts/string_score.js',
          './bower_components/underscore.string',
-@@ -54,6 +56,9 @@ module.exports = (env) => {
+         './vendor/scripts/coffeescript.js',
+@@ -53,6 +55,9 @@ module.exports = (env) => {
          { test: /\.coffee$/, use: [
            { loader: 'coffee-loader' },
          ] },
@@ -120,7 +120,7 @@ index b0959b487..65d859731 100644
          { test: /\.jade$/, use: { loader: 'jade-loader', options: { root: path.resolve('./app') } } },
          { test: /\.pug$/, use: { loader: 'jade-loader', options: { root: path.resolve('./app') } } },
          {
-@@ -128,7 +133,7 @@ module.exports = (env) => {
+@@ -127,7 +132,7 @@ module.exports = (env) => {
            from: 'bower_components/esper.js/esper.js',
            to: 'javascripts/esper.js'
          },{
