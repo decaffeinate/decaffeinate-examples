@@ -62,7 +62,7 @@ index e008887fa..d10ebdf1d 100644
      transports: ['polling'],
 
 diff --git a/package.json b/package.json
-index c2410e7b0..0100228d7 100644
+index 556640c17..8a16b20fd 100644
 --- a/package.json
 +++ b/package.json
 @@ -33,7 +33,6 @@
@@ -74,7 +74,7 @@ index c2410e7b0..0100228d7 100644
      "bower": "bower",
      "dev": "webpack --watch & npm run nodemon",
 diff --git a/spec/helpers/helper.js b/spec/helpers/helper.js
-index fb5e78004..a94be4631 100644
+index fb5e78004..194abd6d9 100644
 --- a/spec/helpers/helper.js
 +++ b/spec/helpers/helper.js
 @@ -2,6 +2,8 @@ var _ = require('lodash');
@@ -86,6 +86,15 @@ index fb5e78004..a94be4631 100644
 
  var oldIt = global.it;
  global.it = function(description, testFn) {
+@@ -44,7 +46,7 @@ if (database.generateMongoConnectionString() !== dbString) {
+   throw Error('Stopping server tests because db connection string was not as expected.');
+ }
+
+-jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000 * 15; // for long Stripe tests
++jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000 * 60; // for long Stripe tests
+ require('../server/common'); // Make sure global testing functions are set up
+
+ // Ignore Stripe/Nocking erroring
 diff --git a/webpack.base.config.js b/webpack.base.config.js
 index 2e3017c7d..759aae42b 100644
 --- a/webpack.base.config.js
