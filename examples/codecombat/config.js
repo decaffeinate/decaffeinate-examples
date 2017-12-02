@@ -16,21 +16,23 @@ export default {
     fi
     rm -rf public
     `,
-    'nvm install 5.10.1',
-    // Some dependency issues make the install fail the first time, so just try again.
-    'npm install || npm install',
-    // node-sass doesn't get set up correctly for some reason, so set it up again.
-    'npm install node-sass',
-    'npm install request',
-    './node_modules/.bin/bower install',
-    './node_modules/.bin/webpack',
-    'node index.js --unittest &',
     `
+    source ~/nvm/nvm.sh
+    nvm install 5.10.1
+    # Some dependency issues make the install fail the first time, so just try again.
+    time npm install || npm install
+    # node-sass doesn't get set up correctly for some reason, so set it up again.
+    time npm install node-sass
+    time npm install request
+    time ./node_modules/.bin/bower install
+    time ./node_modules/.bin/webpack
+    
+    node index.js --unittest &
     n=0
     until [ $n -ge 60 ]; do curl http://localhost:3000 && break; n=$[$n+1]; sleep 1; done
+    time ./node_modules/karma/bin/karma start --browsers Firefox --single-run --reporters dots
+    time npm run jasmine
     `,
-    './node_modules/karma/bin/karma start --browsers Firefox --single-run --reporters dots',
-    'npm run jasmine',
   ],
   expectConversionSuccess: true,
   expectTestSuccess: true,
