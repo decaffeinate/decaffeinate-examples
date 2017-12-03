@@ -6,8 +6,7 @@ export default {
     'babel-plugin-transform-remove-strict-mode',
     'babel-loader',
   ],
-  testCommands: [
-    `
+  testCommands: [`
     set -e
     export COCO_TRAVIS_TEST=1
     export DISPLAY=:99.0
@@ -15,9 +14,6 @@ export default {
       sh -e /etc/init.d/xvfb start
     fi
     rm -rf public
-    `,
-    `
-    set -e
     rm -rf ./node_modules
     source ~/.nvm/nvm.sh
     nvm install 5.10.1
@@ -34,8 +30,7 @@ export default {
     until [ $n -ge 60 ]; do curl http://localhost:3000 && break; n=$[$n+1]; sleep 1; done
     time ./node_modules/karma/bin/karma start --browsers Firefox --single-run --reporters dots
     time npm run jasmine
-    `,
-  ],
+  `],
   expectConversionSuccess: true,
   expectTestSuccess: true,
 };
