@@ -17,7 +17,9 @@ export default {
     rm -rf public
     `,
     `
-    source ~/nvm/nvm.sh
+    set -e
+    rm -rf ./node_modules
+    source ~/.nvm/nvm.sh
     nvm install 5.10.1
     # Some dependency issues make the install fail the first time, so just try again.
     time npm install || npm install
