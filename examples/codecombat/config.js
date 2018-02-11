@@ -16,7 +16,7 @@ export default {
     rm -rf public
     rm -rf ./node_modules
     source ~/.nvm/nvm.sh
-    nvm install 5.10.1
+    nvm install 6.12.2
     # Some dependency issues make the install fail the first time, so just try again.
     time npm install || npm install
     # node-sass doesn't get set up correctly for some reason, so set it up again.
