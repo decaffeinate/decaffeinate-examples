@@ -123,7 +123,7 @@ index 192f8de..c345e98 100644
          { test: /\.coffee$/, use: [
            { loader: 'coffee-loader' },
          ] },
-+        { test: /\.js$/, exclude: /node_modules/, use: [
++        { test: /\.js$/, exclude: /node_modules|dynamicRequire\.js/, use: [
 +            { loader: 'babel-loader' },
 +          ] },
          { test: /\.jade$/, use: { loader: 'jade-loader', options: { root: path.resolve('./app') } } },
