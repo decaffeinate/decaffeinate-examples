@@ -265,7 +265,12 @@ async function runTests(config) {
         await run(command);
       }
     } else {
-      await run('npm install');
+      if (await exists('./yarn.lock')) {
+        await run('npm install -g yarn');
+        await run('yarn');
+      } else {
+        await run('npm install');
+      }
       await run('npm test');
     }
     return 'PASSED';
