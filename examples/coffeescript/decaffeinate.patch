@@ -1,8 +1,8 @@
 diff --git a/Cakefile.js b/Cakefile.js
-index d4e733b7..270db11f 100644
+index a70d4c7..3bb3e35 100644
 --- a/Cakefile.js
 +++ b/Cakefile.js
-@@ -279,6 +279,8 @@ task('bench', 'quick benchmark of compilation time', () => {
+@@ -458,6 +458,8 @@ task('bench', 'quick benchmark of compilation time', () => {
  // Run the CoffeeScript test suite.
  var runTests = function (CoffeeScript) {
    CoffeeScript.register();
@@ -11,17 +11,8 @@ index d4e733b7..270db11f 100644
    const startTime = Date.now();
    let currentFile = null;
    let passedTests = 0;
-@@ -307,6 +309,8 @@ var runTests = function (CoffeeScript) {
-     }
-   };
-
-+  global.skippedTest = function (description, fn) {};
-+
-   // See http://wiki.ecmascript.org/doku.php?id=harmony:egal
-   const egal = function (a, b) {
-     if (a === b) {
-@@ -354,14 +358,14 @@ var runTests = function (CoffeeScript) {
-   if (!generatorsAreAvailable) { files.splice(files.indexOf('generators.coffee'), 1); }
+@@ -510,14 +512,14 @@ var runTests = function (CoffeeScript) {
+   const files = fs.readdirSync('test');
 
    for (const file of Array.from(files)) {
 -    if (helpers.isCoffee(file)) {
@@ -37,30 +28,16 @@ index d4e733b7..270db11f 100644
        } catch (error1) {
          const error = error1;
          failures.push({ filename, error });
-@@ -372,7 +376,12 @@ var runTests = function (CoffeeScript) {
- };
-
-
--task('test', 'run the CoffeeScript language test suite', () => runTests(CoffeeScript));
-+task('test', 'run the CoffeeScript language test suite', () => {
-+  const success = runTests(CoffeeScript);
-+  if (!success) {
-+    process.exitCode = 1;
-+  }
-+});
-
-
- task('test:browser', 'run the test suite against the merged browser script', () => {
 diff --git a/check-coffeescript-examples.sh b/check-coffeescript-examples.sh
 new file mode 100755
-index 00000000..7638b145
+index 0000000..5d768d2
 --- /dev/null
 +++ b/check-coffeescript-examples.sh
 @@ -0,0 +1,20 @@
 +#!/bin/bash
 +
-+# Simple shell script to compare the decaffeinated CoffeeScript 1.10.0 compiler
-+# with the official run, running it on all CoffeeScript files in the repo and
++# Simple shell script to compare the decaffeinated CoffeeScript 1.12.7 compiler
++# with the official one, running it on all CoffeeScript files in the repo and
 +# making sure the output is the same. For now, it just fails on the first error.
 +
 +set -e
@@ -68,7 +45,7 @@ index 00000000..7638b145
 +rm -rf examples-tmp
 +mkdir examples-tmp
 +cd examples-tmp
-+git clone https://github.com/jashkenas/coffeescript.git --branch 1.10.0
++git clone https://github.com/jashkenas/coffeescript.git --branch 1.12.7
 +
 +for path in $(find coffeescript -name '*.coffee'); do
 +  echo "Comparing ${path}..."
@@ -78,10 +55,10 @@ index 00000000..7638b145
 +  echo 'Passed!'
 +done
 diff --git a/test/classes.js b/test/classes.js
-index 405781ad..b9787244 100644
+index ffff3f6..fe1bf20 100644
 --- a/test/classes.js
 +++ b/test/classes.js
-@@ -135,7 +135,8 @@ test("Overriding the static property new doesn't clobber Function::new", () => {
+@@ -146,7 +146,8 @@ test("Overriding the static property new doesn't clobber Function::new", () => {
 
    Function.prototype.new = function () { return new (this)(...arguments); };
 
@@ -91,7 +68,7 @@ index 405781ad..b9787244 100644
    ok((new OneClass()).function === 'function');
    ok(OneClass.new === 'new');
 
-@@ -594,7 +595,8 @@ test('variables in constructor bodies are correctly scoped', () => {
+@@ -610,7 +611,8 @@ test('variables in constructor bodies are correctly scoped', () => {
 
    const a = new A();
    eq(a.captured().x, 10);
@@ -101,7 +78,7 @@ index 405781ad..b9787244 100644
  });
 
 
-@@ -655,7 +657,8 @@ test('ensure that constructors invoked with splats return a new object', () => {
+@@ -671,7 +673,8 @@ test('ensure that constructors invoked with splats return a new object', () => {
    // Ensure that constructors invoked with splats cache the function.
    let called = 0;
    const get = function () { if (called++) { return false; } return (Type = class Type {}); };
@@ -111,7 +88,7 @@ index 405781ad..b9787244 100644
  });
 
  test("`new` shouldn't add extra parens", () => ok(new Date().constructor === Date));
-@@ -1094,7 +1097,8 @@ test('#2599: other typed constructors should be inherited', () => {
+@@ -1115,7 +1118,8 @@ test('#2599: other typed constructors should be inherited', () => {
    return ok(!((new Base()) instanceof Base));
  });
 
@@ -122,10 +99,10 @@ index 405781ad..b9787244 100644
      method() { return 'no one will call me'; }
    }
 diff --git a/test/cluster.js b/test/cluster.js
-index acce6046..9885c14b 100644
+index aa78e2a..2c5a25d 100644
 --- a/test/cluster.js
 +++ b/test/cluster.js
-@@ -5,6 +5,10 @@
+@@ -12,6 +12,10 @@
 
  if (typeof testingBrowser !== 'undefined' && testingBrowser !== null) { return; }
 
@@ -137,10 +114,10 @@ index acce6046..9885c14b 100644
 
  if (cluster.isMaster) {
 diff --git a/test/error_messages.js b/test/error_messages.js
-index 82058386..6606017e 100644
+index 18862a4..5c11837 100644
 --- a/test/error_messages.js
 +++ b/test/error_messages.js
-@@ -78,7 +78,7 @@ if (typeof require !== 'undefined' && require !== null) {
+@@ -84,7 +84,7 @@ if (typeof require !== 'undefined' && require !== null) {
 
    test('patchStackTrace line patching', () => {
      const err = new Error('error');
@@ -150,10 +127,10 @@ index 82058386..6606017e 100644
 
    test('patchStackTrace stack prelude consistent with V8', () => {
 diff --git a/test/importing.js b/test/importing.js
-index 6540e78c..00641e2b 100644
+index f8dec2a..91e3edd 100644
 --- a/test/importing.js
 +++ b/test/importing.js
-@@ -25,7 +25,8 @@ if ((typeof window === 'undefined' || window === null) && (typeof testingBrowser
+@@ -33,7 +33,8 @@ if ((typeof window === 'undefined' || window === null) && (typeof testingBrowser
      } else {
        global[magicKey] = {};
        if ((typeof require !== 'undefined' && require !== null ? require.extensions : undefined) != null) {
@@ -164,10 +141,10 @@ index 6540e78c..00641e2b 100644
        return delete global[magicKey];
      }
 diff --git a/test/operators.js b/test/operators.js
-index f80726d0..54ca00d6 100644
+index 72dec42..0f89850 100644
 --- a/test/operators.js
 +++ b/test/operators.js
-@@ -259,7 +259,8 @@ test('#1100: precedence in or-test compilation of `in`', () => {
+@@ -268,7 +268,8 @@ test('#1100: precedence in or-test compilation of `in`', () => {
    return ok(!([1, 0 || 1].includes(0)));
  });
 
@@ -177,7 +154,7 @@ index f80726d0..54ca00d6 100644
    let needle;
    return ok((needle = undefined, !Array.from({ length: 1 }).includes(needle)));
  });
-@@ -466,7 +467,8 @@ test('#3363: Modulo operator coercing order', () => {
+@@ -471,7 +472,8 @@ test('#3363: Modulo operator coercing order', () => {
    return eq(5, count);
  });
 
@@ -188,10 +165,10 @@ index f80726d0..54ca00d6 100644
    // readability. To make sure that they do when the operand is an identifier,
    // test that they are consistent with another unary operator as well as another
 diff --git a/test/scope.js b/test/scope.js
-index e3baf5a2..b32c49d8 100644
+index 2c94e51..d35d984 100644
 --- a/test/scope.js
 +++ b/test/scope.js
-@@ -93,19 +93,19 @@ test('loop variable should be accessible after for-in loop', () => {
+@@ -118,19 +118,19 @@ test('loop variable should be accessible after for-from loop', () => {
    })());
    return eq(x, 2);
  });
@@ -216,3 +193,16 @@ index e3baf5a2..b32c49d8 100644
  test("#1973: redefining Array/Object constructors shouldn't confuse __X helpers", () => {
    const arr = [1, 2, 3, 4];
    arrayEq([3, 4], arr.slice(2));
+diff --git a/test/support/helpers.js b/test/support/helpers.js
+index 2d0578a..a50a6b7 100644
+--- a/test/support/helpers.js
++++ b/test/support/helpers.js
+@@ -9,6 +9,8 @@
+ */
+ // TODO: This file was created by bulk-decaffeinate.
+ // Fix any style issues and re-enable lint.
++global.skippedTest = function (description, fn) {};
++
+ /*
+  * decaffeinate suggestions:
+  * DS102: Remove unnecessary code created because of implicit returns
