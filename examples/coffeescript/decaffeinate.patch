@@ -126,6 +126,20 @@ index 18862a4..5c11837 100644
    });
 
    test('patchStackTrace stack prelude consistent with V8', () => {
+diff --git a/test/functions.js b/test/functions.js
+index b5e72c4..bc03139 100644
+--- a/test/functions.js
++++ b/test/functions.js
+@@ -118,7 +118,8 @@ test('self-referencing functions', () => {
+   return eq(changeMe, 2);
+ });
+
+-test("#2009: don't touch `` `this` ``", () => {
++// https://github.com/decaffeinate/decaffeinate/blob/master/docs/correctness-issues.md#inline-js-that-relies-on-coffeescript-implementation-details-may-not-be-transformed-correctly
++skippedTest("#2009: don't touch `` `this` ``", () => {
+   const nonceA = {};
+   const nonceB = {};
+   let fn = null;
 diff --git a/test/importing.js b/test/importing.js
 index f8dec2a..91e3edd 100644
 --- a/test/importing.js
