@@ -1,6 +1,7 @@
 export default {
   cloneUrl: 'https://github.com/jashkenas/coffeescript.git',
   forkUrl: 'git@github.com:decaffeinate-examples/coffeescript2.git',
+  branch: '2.2.1',
   useDefaultConfig: true,
   extraDependencies: [
     'babel-plugin-transform-remove-strict-mode',
