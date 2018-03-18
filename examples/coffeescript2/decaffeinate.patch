@@ -36,7 +36,7 @@ index 0000000..5d768d2
 @@ -0,0 +1,20 @@
 +#!/bin/bash
 +
-+# Simple shell script to compare the decaffeinated CoffeeScript compiler
++# Simple shell script to compare the decaffeinated CoffeeScript 2.2.1 compiler
 +# with the official one, running it on all CoffeeScript files in the repo and
 +# making sure the output is the same. For now, it just fails on the first error.
 +
@@ -45,7 +45,7 @@ index 0000000..5d768d2
 +rm -rf examples-tmp
 +mkdir examples-tmp
 +cd examples-tmp
-+git clone https://github.com/jashkenas/coffeescript.git
++git clone https://github.com/jashkenas/coffeescript.git --branch 2.2.1
 +
 +for path in $(find coffeescript -name '*.coffee'); do
 +  echo "Comparing ${path}..."
