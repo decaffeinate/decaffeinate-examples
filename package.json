@@ -14,7 +14,7 @@
     "babel-register": "^6.22.0",
     "commander": "^2.9.0",
     "eslint": "^4.1.0",
-    "eslint-plugin-babel": "^4.0.1",
+    "eslint-plugin-babel": "^5.0.0",
     "moment": "^2.18.1",
     "moment-precise-range-plugin": "^1.2.1",
     "mz": "^2.6.0"
