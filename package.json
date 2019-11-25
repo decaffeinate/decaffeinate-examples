@@ -13,7 +13,7 @@
     "babel-preset-latest": "^6.22.0",
     "babel-register": "^6.22.0",
     "commander": "^2.9.0",
-    "eslint": "^4.1.0",
+    "eslint": "^6.7.1",
     "eslint-plugin-babel": "^5.1.0",
     "moment": "^2.18.1",
     "moment-precise-range-plugin": "^1.2.1",
